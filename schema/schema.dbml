@@ -1,0 +1,119 @@
+Project Sustainable_Friends {
+  database_type: 'MySQL'
+}
+Table Item {
+  name VARCHAR(84) [not null]
+  description TEXT
+  source_image VARCHAR(84)
+  id BIGINT [pk, increment]
+  identifier VARCHAR(32) [not null, note: 'used in DTO']
+  create_time TIMESTAMP [not null, default: `CURRENT_TIMESTAMP()`]
+  changed_time TIMESTAMP
+  deleted_time TIMESTAMP
+}
+Table Sub_Item {
+  item_id BIGINT [not null, ref: > Item.id]
+  name VARCHAR(84) [not null]
+  description TEXT
+  source_image VARCHAR(84)
+  id BIGINT [pk, increment]
+  identifier VARCHAR(32) [not null, note: 'used in DTO']
+  create_time TIMESTAMP [not null, default: `CURRENT_TIMESTAMP()`]
+  changed_time TIMESTAMP
+  deleted_time TIMESTAMP
+}
+Table User {  
+  email VARCHAR(84) [UNIQUE, not null, note: 'used as login']
+  name VARCHAR(84) [not null]
+  password VARCHAR(128) [not null, note: 'SHA512']
+  id BIGINT [pk, increment]
+  identifier VARCHAR(32) [not null, note: 'used in DTO']
+  create_time TIMESTAMP [not null, default: `CURRENT_TIMESTAMP()`]
+  changed_time TIMESTAMP
+  deleted_time TIMESTAMP
+}
+Table Personal_User_Spec {
+  user_id BIGINT [pk, ref: - User.id]
+  national_identity VARCHAR(11) [UNIQUE, not null, note: 'cpf']
+  
+  create_time TIMESTAMP [not null, default: `CURRENT_TIMESTAMP()`]
+  changed_time TIMESTAMP
+  deleted_time TIMESTAMP
+}
+Table Company_User_Spec {
+  user_id BIGINT [pk, ref: - User.id]
+  national_identity VARCHAR(14) [UNIQUE, not null, note: 'cnpj']
+  create_time TIMESTAMP [not null, default: `CURRENT_TIMESTAMP()`]
+  changed_time TIMESTAMP
+  deleted_time TIMESTAMP
+}
+Table Point {
+  user_id BIGINT [not null, ref: > User.id]
+  latitude DECIMAL(9,6) [not null]
+  longitude DECIMAL(9,6) [not null]
+  changed_by BIGINT [ref: > User.id]
+  deleted_by BIGINT [ref: > User.id]
+  id BIGINT [pk, increment]
+  identifier VARCHAR(32) [not null, note: 'used in DTO']
+  create_time TIMESTAMP [not null, default: `CURRENT_TIMESTAMP()`]
+  changed_time TIMESTAMP
+  deleted_time TIMESTAMP
+}
+Table Collect_Point_Spec {
+  point_id BIGINT [pk, ref: - Point.id]
+  changed_by BIGINT [ref: > User.id]
+  deleted_by BIGINT [ref: > User.id]
+  create_time TIMESTAMP [not null, default: `CURRENT_TIMESTAMP()`]
+  changed_time TIMESTAMP
+  deleted_time TIMESTAMP
+}
+Table Delivery_Point_Spec {
+  point_id BIGINT [pk, ref: - Point.id]
+  description TEXT
+  create_time TIMESTAMP [not null, default: `CURRENT_TIMESTAMP()`]
+  changed_time TIMESTAMP
+  deleted_time TIMESTAMP
+}
+Table Point_Item {  
+  point_id BIGINT [not null, ref: > Point.id]
+  item_id BIGINT [not null, ref: > Item.id]
+  collected_by BIGINT [ref: > User.id]
+  collected_time TIMESTAMP
+  id BIGINT [pk, increment]
+  identifier VARCHAR(32) [not null, note: 'used in DTO']
+  create_time TIMESTAMP [not null, default: `CURRENT_TIMESTAMP()`]
+  changed_time TIMESTAMP
+  deleted_time TIMESTAMP
+}
+Table Point_Sub_Item {
+  point_item_id BIGINT [not null, ref: > Point_Item.id]
+  sub_item_id BIGINT [not null, ref: > Sub_Item.id]
+  collected_by BIGINT [ref: > User.id]
+  collected_time TIMESTAMP
+  id BIGINT [pk, increment]
+  identifier VARCHAR(32) [not null, note: 'used in DTO']
+  create_time TIMESTAMP [not null, default: `CURRENT_TIMESTAMP()`]
+  changed_time TIMESTAMP
+  deleted_time TIMESTAMP
+}
+Table Health_Check {
+  id BIGINT [pk, increment]
+  identifier VARCHAR(32) [not null, note: 'used in DTO']
+  create_time TIMESTAMP [not null, default: `CURRENT_TIMESTAMP()`]
+  changed_time TIMESTAMP
+  deleted_time TIMESTAMP
+}
+Table Health_Check_Spec {
+  health_check_id BIGINT [pk, ref: - Health_Check.id]
+  create_time TIMESTAMP [not null, default: `CURRENT_TIMESTAMP()`]
+  changed_time TIMESTAMP
+  deleted_time TIMESTAMP
+}
+Table Health_Check_Child { 
+  health_check_id BIGINT [not null, ref: > Health_Check.id]
+  id BIGINT [pk, increment]
+  identifier VARCHAR(32) [not null, note: 'used in DTO']
+  create_time TIMESTAMP [not null, default: `CURRENT_TIMESTAMP()`]
+  changed_time TIMESTAMP
+  deleted_time TIMESTAMP
+}
