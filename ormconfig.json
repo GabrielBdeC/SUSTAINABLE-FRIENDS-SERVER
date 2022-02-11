@@ -5,6 +5,6 @@
   "username": "sf_user",
   "password": "wVK7RSL3US@8EsBf",
   "database": "sf",
-  "entities": [],
+  "entities": ["dist/app/modules/*/models/*.entity.js"],
   "synchronize": true
 }
