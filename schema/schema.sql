@@ -1,24 +1,12 @@
 CREATE TABLE `Item` (
   `name` VARCHAR(84) NOT NULL,
-  `description` TEXT,
-  `source_image` VARCHAR(84),
-  `id` BIGINT PRIMARY KEY AUTO_INCREMENT,
-  `identifier` VARCHAR(32) NOT NULL COMMENT 'used in DTO',
-  `create_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
-  `changed_time` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(),
-  `deleted_time` TIMESTAMP
+  `id` BIGINT PRIMARY KEY AUTO_INCREMENT
 );
 
 CREATE TABLE `Sub_Item` (
   `item_id` BIGINT NOT NULL,
   `name` VARCHAR(84) NOT NULL,
-  `description` TEXT,
-  `source_image` VARCHAR(84),
-  `id` BIGINT PRIMARY KEY AUTO_INCREMENT,
-  `identifier` VARCHAR(32) NOT NULL COMMENT 'used in DTO',
-  `create_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
-  `changed_time` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(),
-  `deleted_time` TIMESTAMP
+  `id` BIGINT PRIMARY KEY AUTO_INCREMENT
 );
 
 CREATE TABLE `User` (
@@ -26,26 +14,20 @@ CREATE TABLE `User` (
   `name` VARCHAR(84) NOT NULL,
   `password` VARCHAR(128) NOT NULL COMMENT 'SHA512',
   `id` BIGINT PRIMARY KEY AUTO_INCREMENT,
-  `identifier` VARCHAR(32) NOT NULL COMMENT 'used in DTO',
-  `create_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
-  `changed_time` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(),
+  `identifier` VARCHAR(32) UNIQUE NOT NULL COMMENT 'used in DTO',
+  `create_time` TIMESTAMP NOT NULL DEFAULT (CURRENT_TIMESTAMP()),
+  `changed_time` TIMESTAMP ON UPDATE (CURRENT_TIMESTAMP()),
   `deleted_time` TIMESTAMP
 );
 
 CREATE TABLE `Personal_User_Spec` (
   `user_id` BIGINT PRIMARY KEY,
-  `national_identity` VARCHAR(11) UNIQUE NOT NULL COMMENT 'cpf',
-  `create_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
-  `changed_time` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(),
-  `deleted_time` TIMESTAMP
+  `national_identity` VARCHAR(11) UNIQUE NOT NULL COMMENT 'cpf'
 );
 
 CREATE TABLE `Company_User_Spec` (
   `user_id` BIGINT PRIMARY KEY,
-  `national_identity` VARCHAR(14) UNIQUE NOT NULL COMMENT 'cnpj',
-  `create_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
-  `changed_time` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(),
-  `deleted_time` TIMESTAMP
+  `national_identity` VARCHAR(14) UNIQUE NOT NULL COMMENT 'cnpj'
 );
 
 CREATE TABLE `Point` (
@@ -55,27 +37,21 @@ CREATE TABLE `Point` (
   `changed_by` BIGINT,
   `deleted_by` BIGINT,
   `id` BIGINT PRIMARY KEY AUTO_INCREMENT,
-  `identifier` VARCHAR(32) NOT NULL COMMENT 'used in DTO',
-  `create_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
-  `changed_time` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(),
+  `identifier` VARCHAR(32) UNIQUE NOT NULL COMMENT 'used in DTO',
+  `create_time` TIMESTAMP NOT NULL DEFAULT (CURRENT_TIMESTAMP()),
+  `changed_time` TIMESTAMP ON UPDATE (CURRENT_TIMESTAMP()),
   `deleted_time` TIMESTAMP
 );
 
 CREATE TABLE `Collect_Point_Spec` (
   `point_id` BIGINT PRIMARY KEY,
   `changed_by` BIGINT,
-  `deleted_by` BIGINT,
-  `create_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
-  `changed_time` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(),
-  `deleted_time` TIMESTAMP
+  `deleted_by` BIGINT
 );
 
 CREATE TABLE `Delivery_Point_Spec` (
   `point_id` BIGINT PRIMARY KEY,
-  `description` TEXT,
-  `create_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
-  `changed_time` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(),
-  `deleted_time` TIMESTAMP
+  `description` TEXT
 );
 
 CREATE TABLE `Point_Item` (
@@ -84,9 +60,9 @@ CREATE TABLE `Point_Item` (
   `collected_by` BIGINT,
   `collected_time` TIMESTAMP,
   `id` BIGINT PRIMARY KEY AUTO_INCREMENT,
-  `identifier` VARCHAR(32) NOT NULL COMMENT 'used in DTO',
-  `create_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
-  `changed_time` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(),
+  `identifier` VARCHAR(32) UNIQUE NOT NULL COMMENT 'used in DTO',
+  `create_time` TIMESTAMP NOT NULL DEFAULT (CURRENT_TIMESTAMP()),
+  `changed_time` TIMESTAMP ON UPDATE (CURRENT_TIMESTAMP()),
   `deleted_time` TIMESTAMP
 );
 
@@ -96,33 +72,34 @@ CREATE TABLE `Point_Sub_Item` (
   `collected_by` BIGINT,
   `collected_time` TIMESTAMP,
   `id` BIGINT PRIMARY KEY AUTO_INCREMENT,
-  `identifier` VARCHAR(32) NOT NULL COMMENT 'used in DTO',
-  `create_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
-  `changed_time` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(),
+  `identifier` VARCHAR(32) UNIQUE NOT NULL COMMENT 'used in DTO',
+  `create_time` TIMESTAMP NOT NULL DEFAULT (CURRENT_TIMESTAMP()),
+  `changed_time` TIMESTAMP ON UPDATE (CURRENT_TIMESTAMP()),
   `deleted_time` TIMESTAMP
 );
 
 CREATE TABLE `Health_Check` (
   `id` BIGINT PRIMARY KEY AUTO_INCREMENT,
-  `identifier` VARCHAR(32) NOT NULL COMMENT 'used in DTO',
-  `create_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
-  `changed_time` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(),
+  `identifier` VARCHAR(32) UNIQUE NOT NULL COMMENT 'used in DTO',
+  `create_time` TIMESTAMP NOT NULL DEFAULT (CURRENT_TIMESTAMP()),
+  `changed_time` TIMESTAMP ON UPDATE (CURRENT_TIMESTAMP()),
   `deleted_time` TIMESTAMP
 );
 
-CREATE TABLE `Health_Check_Spec` (
-  `health_check_id` BIGINT PRIMARY KEY,
-  `create_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
-  `changed_time` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(),
-  `deleted_time` TIMESTAMP
+CREATE TABLE `Health_Check_Spec_1` (
+  `health_check_id` BIGINT PRIMARY KEY
+);
+
+CREATE TABLE `Health_Check_Spec_2` (
+  `health_check_id` BIGINT PRIMARY KEY
 );
 
 CREATE TABLE `Health_Check_Child` (
   `health_check_id` BIGINT NOT NULL,
   `id` BIGINT PRIMARY KEY AUTO_INCREMENT,
-  `identifier` VARCHAR(32) NOT NULL COMMENT 'used in DTO',
-  `create_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
-  `changed_time` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(),
+  `identifier` VARCHAR(32) UNIQUE NOT NULL COMMENT 'used in DTO',
+  `create_time` TIMESTAMP NOT NULL DEFAULT (CURRENT_TIMESTAMP()),
+  `changed_time` TIMESTAMP ON UPDATE (CURRENT_TIMESTAMP()),
   `deleted_time` TIMESTAMP
 );
 
@@ -158,6 +135,8 @@ ALTER TABLE `Point_Sub_Item` ADD FOREIGN KEY (`sub_item_id`) REFERENCES `Sub_Ite
 
 ALTER TABLE `Point_Sub_Item` ADD FOREIGN KEY (`collected_by`) REFERENCES `User` (`id`);
 
-ALTER TABLE `Health_Check_Spec` ADD FOREIGN KEY (`health_check_id`) REFERENCES `Health_Check` (`id`);
+ALTER TABLE `Health_Check_Spec_1` ADD FOREIGN KEY (`health_check_id`) REFERENCES `Health_Check` (`id`);
+
+ALTER TABLE `Health_Check_Spec_2` ADD FOREIGN KEY (`health_check_id`) REFERENCES `Health_Check` (`id`);
 
 ALTER TABLE `Health_Check_Child` ADD FOREIGN KEY (`health_check_id`) REFERENCES `Health_Check` (`id`);
