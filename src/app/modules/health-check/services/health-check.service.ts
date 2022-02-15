@@ -10,6 +10,13 @@ export class HealthCheckService {
     private healthCheckRepository: Repository<HealthCheck>,
   ) {}
   public getAll(): Promise<HealthCheck[]> {
-    return this.healthCheckRepository.find();
+    return this.healthCheckRepository.find({
+      withDeleted: false,
+    });
+  }
+  public getOne(id: string): Promise<HealthCheck> {
+    return this.healthCheckRepository.findOne({
+      where: { id: id },
+    });
   }
 }
