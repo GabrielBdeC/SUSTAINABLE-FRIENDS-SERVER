@@ -1,0 +1,19 @@
+import { Module } from '@nestjs/common';
+import { HealthCheckService } from './services/health-check.service';
+import { HealthCheckChildService } from './services/health-check-child.service';
+import { HealthCheckController } from './controllers/health-check.controller';
+import { HealthCheckChildController } from './controllers/health-check-child.controller';
+import { HealthCheck } from './models/health-check.entity';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { HealthCheckDataConverter } from './data-converters/health-check.data-converter';
+
+@Module({
+  imports: [TypeOrmModule.forFeature([HealthCheck])],
+  providers: [
+    HealthCheckService,
+    HealthCheckChildService,
+    HealthCheckDataConverter,
+  ],
+  controllers: [HealthCheckController, HealthCheckChildController],
+})
+export class HealthCheckModule {}
