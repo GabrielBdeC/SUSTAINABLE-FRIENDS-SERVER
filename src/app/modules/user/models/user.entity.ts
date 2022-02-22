@@ -1,9 +1,17 @@
-import { Column, Entity, Generated, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  DeleteDateColumn,
+  Entity,
+  Generated,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 @Entity({
   name: 'User',
 })
-export class UserRepository {
+export class User {
   @Column({
     name: 'email',
     type: 'varchar',
@@ -40,28 +48,28 @@ export class UserRepository {
   @Column({
     name: 'identifier',
     type: 'varchar',
-    length: 32,
+    length: 36,
     nullable: false,
     comment: 'used in DTO',
   })
   @Generated('uuid')
   protected identifier: string;
 
-  @Column({
+  @CreateDateColumn({
     name: 'create_time',
     type: 'timestamp',
     nullable: false,
   })
   protected createTime: Date;
 
-  @Column({
+  @UpdateDateColumn({
     name: 'changed_time',
     type: 'timestamp',
     nullable: true,
   })
   protected changedTime: Date;
 
-  @Column({
+  @DeleteDateColumn({
     name: 'deleted_time',
     type: 'timestamp',
     nullable: true,
