@@ -8,6 +8,8 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
+import { IsEmail, IsNotEmpty, IsString, Min, Max } from 'class-validator';
+
 @Entity({
   name: 'User',
 })
@@ -20,6 +22,11 @@ export class User {
     nullable: false,
     comment: 'used as login',
   })
+  @IsEmail()
+  @IsNotEmpty({
+    message: 'Email field cannot be empty. Please provide an email.',
+  })
+  @Min(6, { message: 'Email needs to be at least 7 characters long.' })
   protected email: string;
 
   @Column({
