@@ -1,10 +1,5 @@
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  OneToOne,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Length } from 'class-validator';
+import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { User } from './user.entity';
 
 @Entity({
@@ -17,21 +12,17 @@ export class CompanyUser {
   })
   protected id: number;
 
+  @OneToOne(() => User, { onDelete: 'CASCADE' })
+  @Length(14)
   @Column({
     name: 'cnpj',
     type: 'varchar',
-    length: '11',
+    length: '14',
     unique: true,
     nullable: false,
     comment: 'cnpj',
   })
   protected cnpj: string;
-
-  @OneToOne(() => User, {
-    cascade: true,
-  })
-  @JoinColumn()
-  protected user: User;
 
   public getCNPJ(): string {
     return this.cnpj;
@@ -39,13 +30,5 @@ export class CompanyUser {
 
   public setCNPJ(cnpj: string): void {
     this.cnpj = cnpj;
-  }
-
-  public getUser(): any {
-    return this.user;
-  }
-
-  public setUser(user: User): void {
-    this.user = user;
   }
 }

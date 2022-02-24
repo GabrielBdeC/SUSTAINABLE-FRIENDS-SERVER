@@ -1,13 +1,17 @@
-import { BadRequestException, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/app/modules/user/models/user.entity';
 import { Repository } from 'typeorm';
 import * as argon2 from 'argon2';
 import { UserDataConverter } from 'src/app/modules/user/data-converters/user.data-converter';
 import { UserDto } from 'src/app/modules/user/dtos/user.dto';
-import { LoginUserDto } from 'src/app/modules/user/dtos/login-user.dto';
 import { JwtService } from '@nestjs/jwt';
 
+@Injectable()
 export class AuthService {
   constructor(
     @InjectRepository(User) private userRepository: Repository<User>,
@@ -31,19 +35,14 @@ export class AuthService {
     } else {
       throw new NotFoundException();
     }
-
-    // public issueJWT(user: User): UserDto {
-    //   const payload = { name: userDto.name, identifier: userDto.identifier };
-    //   userDto.jwt = this.jwtService.sign(payload);
-    //   return userDto;
-    // }
   }
 
-  public issueJWT(loginUserDto: LoginUserDto) {
-    const payload = { email: loginUserDto.email };
+  public async issueJWT(userDto: UserDto) {
+    const payload = { name: userDto.name, sub: userDto.identifier };
     return {
-      access_token: this.jwtService.sign(payload),
+      access_token: await this.jwtService.signAsync(payload),
+      name: userDto.name,
+      identifier: userDto.identifier,
     };
-    return loginUserDto;
   }
 }

@@ -1,6 +1,7 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from 'src/app/shared/auth/auth.module';
+import { ErrorModule } from 'src/app/shared/errors/error.module';
 import { LoginController } from './controllers/login.controller';
 import { SignUpController } from './controllers/signup.controller';
 import { UserDataConverter } from './data-converters/user.data-converter';
@@ -9,7 +10,11 @@ import { User } from './models/user.entity';
 import { UserService } from './services/user.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User, CompanyUser])],
+  imports: [
+    TypeOrmModule.forFeature([User, CompanyUser]),
+    forwardRef(() => AuthModule),
+    ErrorModule,
+  ],
   providers: [UserService, UserDataConverter],
   controllers: [LoginController, SignUpController],
   exports: [UserService, UserDataConverter],

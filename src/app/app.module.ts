@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { HealthCheckModule } from './modules/health-check/health-check.module';
 import { UsersModule } from './modules/user/user.module';
 import { AuthModule } from './shared/auth/auth.module';
+import { ErrorModule } from './shared/errors/error.module';
 
 @Module({
   imports: [
@@ -11,6 +12,7 @@ import { AuthModule } from './shared/auth/auth.module';
     HealthCheckModule,
     UsersModule,
     AuthModule,
+    ErrorModule,
     ConfigModule.forRoot(),
   ],
 })

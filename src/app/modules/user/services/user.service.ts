@@ -1,31 +1,37 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { UserDataConverter } from '../data-converters/user.data-converter';
 import { User } from '../models/user.entity';
-import { CompanyUser } from '../models/company-user.entity';
-import { LoginUserDto } from '../dtos/login-user.dto';
-import { JwtService } from '@nestjs/jwt';
+import { validateOrReject } from 'class-validator';
+import { ErrorHandlerService } from 'src/app/shared/errors/error.service';
 
 export class UserService {
   constructor(
     @InjectRepository(User) private userRepository: Repository<User>,
-    @InjectRepository(CompanyUser)
-    private jwtService: JwtService,
+    private errorHandlerService: ErrorHandlerService,
   ) {}
 
   public async getAll(): Promise<User[]> {
     return this.userRepository.find();
   }
 
-  public async create(user: User): Promise<User> {
-    return await this.userRepository.save(user);
+  public async create(user: User): Promise<User | any> {
+    try {
+      await validateOrReject(user, {
+        validationError: {
+          target: false,
+        },
+      });
+    } catch (errors) {
+      return this.errorHandlerService.HandleValidationError(errors);
+    }
+    try {
+      return await this.userRepository.save(user);
+    } catch (err) {
+      return this.errorHandlerService.HandleDuplicateError(err);
+    }
   }
 
-  public async issueJWT(loginUserDto: LoginUserDto) {
-    const payload = { email: loginUserDto.email };
-    return {
-      access_token: this.jwtService.sign(payload),
-    };
-    return loginUserDto;
-  }
+  // public async handleError(errors) {
+  //   return errors;
+  // }
 }

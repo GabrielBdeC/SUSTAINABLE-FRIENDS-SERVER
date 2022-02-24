@@ -1,7 +1,7 @@
 export interface UserDto {
   name: string;
-  email: string;
+  email: string | undefined;
   password: string | undefined;
   identifier: string;
-  jwt: string | undefined;
+  cnpj: string | undefined;
 }

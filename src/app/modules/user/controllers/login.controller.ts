@@ -1,20 +1,11 @@
-import { Body, Controller, Post, Request, UseGuards } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
+import { Controller, Get, Post, Request, UseGuards } from '@nestjs/common';
 import { AuthService } from 'src/app/shared/auth/auth.service';
+import { JwtAuthGuard } from 'src/app/shared/auth/guards/jwt-auth.guard';
 import { LocalAuthGuard } from 'src/app/shared/auth/guards/local-auth.guard';
-// import { AuthService } from 'src/app/shared/auth/auth.service';
-import { UserDataConverter } from '../data-converters/user.data-converter';
-import { UserDto } from '../dtos/user.dto';
-import { User } from '../models/user.entity';
-// import { User } from '../models/user.entity';
-import { UserService } from '../services/user.service';
 
 @Controller('api/v1/auth/login')
 export class LoginController {
-  constructor(
-    private userService: UserService,
-    private userDataConverter: UserDataConverter,
-  ) {}
+  constructor(private authService: AuthService) {}
 
   // @Get()
   // async getAll(): Promise<any> {
@@ -28,12 +19,18 @@ export class LoginController {
   @UseGuards(LocalAuthGuard)
   @Post()
   async login(@Request() req): Promise<any> {
-    const user = this.userService.issueJWT(req.user);
+    return this.authService.issueJWT(req.user);
+  }
 
-    // const user = await this.userDataConverter
-    //   .toEntity(userDto)
-    //   .then((user: User) => user);
+  @UseGuards(JwtAuthGuard)
+  @Get('protected')
+  getAll(@Request() req) {
+    return req.user;
+  }
 
+  @UseGuards(JwtAuthGuard)
+  @Get('protected/double')
+  getOne(@Request() req) {
     return req.user;
   }
 }

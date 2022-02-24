@@ -1,6 +1,7 @@
 import { UserDto } from '../dtos/user.dto';
 import { User } from '../models/user.entity';
 import * as argon2 from 'argon2';
+import { v4 as uuidv4 } from 'uuid';
 import { CompanyUser } from '../models/company-user.entity';
 
 export class UserDataConverter {
@@ -19,8 +20,21 @@ export class UserDataConverter {
     // user.setName(dto.getName())
     user.setEmail(dto.email);
 
-    const hash = await argon2.hash(dto.password);
-    user.setPassword(hash);
+    if (dto.password && typeof dto.password === 'string') {
+      const hash = await argon2.hash(dto.password);
+      user.setPassword(hash);
+    } else {
+      user.setPassword(dto.password);
+    }
+
+    const identifier = uuidv4().replace(/-/g, '').toUpperCase(); // colocar no data converter
+    user.setIdentifier(identifier);
+
+    if (dto.cnpj) {
+      const company = new CompanyUser();
+      company.setCNPJ(dto.cnpj);
+      user.setCompany(company);
+    }
 
     return user;
   }

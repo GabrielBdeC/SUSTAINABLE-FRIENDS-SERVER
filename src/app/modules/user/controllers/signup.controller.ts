@@ -1,4 +1,5 @@
 import { Body, Controller, Post } from '@nestjs/common';
+import { AuthService } from 'src/app/shared/auth/auth.service';
 import { UserDataConverter } from '../data-converters/user.data-converter';
 import { UserDto } from '../dtos/user.dto';
 import { UserService } from '../services/user.service';
@@ -8,6 +9,7 @@ export class SignUpController {
   constructor(
     private userService: UserService,
     private userDataConverter: UserDataConverter,
+    private authService: AuthService,
   ) {}
 
   @Post()
@@ -16,6 +18,8 @@ export class SignUpController {
 
     const new_user = await this.userService.create(new_user_entity);
 
-    return this.userDataConverter.toDto(new_user);
+    const userDto = this.userDataConverter.toDto(new_user);
+
+    return this.authService.issueJWT(userDto);
   }
 }
