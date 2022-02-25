@@ -2,9 +2,9 @@
   "type": "mysql",
   "host": "localhost",
   "port": 3306,
-  "username": "root",
-  "password": "root",
-  "database": "sf",
+  "username": "",
+  "password": "",
+  "database": "projetointegrador",
   "entities": ["dist/app/modules/*/models/*.entity.js"],
   "synchronize": true
 }
