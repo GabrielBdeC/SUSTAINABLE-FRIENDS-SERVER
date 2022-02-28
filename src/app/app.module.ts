@@ -5,6 +5,7 @@ import { HealthCheckModule } from './modules/health-check/health-check.module';
 import { UsersModule } from './modules/user/user.module';
 import { AuthModule } from './shared/auth/auth.module';
 import { ErrorModule } from './shared/errors/error.module';
+import { PointModule } from './modules/point/point.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { ErrorModule } from './shared/errors/error.module';
     AuthModule,
     ErrorModule,
     ConfigModule.forRoot(),
+    PointModule,
   ],
 })
 export class AppModule {}
