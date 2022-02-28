@@ -1,24 +1,23 @@
-import { Controller, Get } from '@nestjs/common';
-import { HealthCheckDataConverter } from '../data-converters/health-check.data-converter';
-import { HealthCheckDto } from '../dtos/health-check.dto';
-import { HealthCheck } from '../models/health-check.entity';
+import { Controller, Get, HttpException, HttpStatus } from '@nestjs/common';
 import { HealthCheckService } from '../services/health-check.service';
 
 @Controller('health_check')
 export class HealthCheckController {
-  constructor(
-    private healthCheckService: HealthCheckService,
-    private healthCheckDataConverter: HealthCheckDataConverter,
-  ) {}
+  constructor(private healthCheckService: HealthCheckService) {}
 
   @Get()
-  public async getAll() {
-    return await this.healthCheckService
-      .getAll()
-      .then((listHealthCheck: HealthCheck[]) => {
-        return listHealthCheck.map((healthCheck: HealthCheck) => {
-          return this.healthCheckDataConverter.toDto(healthCheck);
-        });
+  public async get(): Promise<string> {
+    return this.healthCheckService
+      .test()
+      .catch((err) => {
+        console.log(err);
+        throw new HttpException(
+          'Database Error',
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
+      })
+      .then(() => {
+        return 'OK';
       });
   }
 }
