@@ -7,9 +7,10 @@ import { HealthCheck } from '../models/health-check.entity';
 export class HealthCheckService {
   constructor(
     @InjectRepository(HealthCheck)
-    private healthCheckRepository: Repository<HealthCheck>,
+    private pointRepository: Repository<HealthCheck>,
   ) {}
-  public getAll(): Promise<HealthCheck[]> {
-    return this.healthCheckRepository.find();
+
+  public async test(): Promise<HealthCheck[]> {
+    return this.pointRepository.find();
   }
 }

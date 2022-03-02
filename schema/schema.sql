@@ -79,28 +79,7 @@ CREATE TABLE `Point_Sub_Item` (
 );
 
 CREATE TABLE `Health_Check` (
-  `id` BIGINT PRIMARY KEY AUTO_INCREMENT,
-  `identifier` VARCHAR(32) UNIQUE NOT NULL COMMENT 'used in DTO',
-  `create_time` TIMESTAMP NOT NULL DEFAULT (CURRENT_TIMESTAMP()),
-  `changed_time` TIMESTAMP ON UPDATE (CURRENT_TIMESTAMP()),
-  `deleted_time` TIMESTAMP
-);
-
-CREATE TABLE `Health_Check_Spec_1` (
-  `health_check_id` BIGINT PRIMARY KEY
-);
-
-CREATE TABLE `Health_Check_Spec_2` (
-  `health_check_id` BIGINT PRIMARY KEY
-);
-
-CREATE TABLE `Health_Check_Child` (
-  `health_check_id` BIGINT NOT NULL,
-  `id` BIGINT PRIMARY KEY AUTO_INCREMENT,
-  `identifier` VARCHAR(32) UNIQUE NOT NULL COMMENT 'used in DTO',
-  `create_time` TIMESTAMP NOT NULL DEFAULT (CURRENT_TIMESTAMP()),
-  `changed_time` TIMESTAMP ON UPDATE (CURRENT_TIMESTAMP()),
-  `deleted_time` TIMESTAMP
+  `id` INT PRIMARY KEY AUTO_INCREMENT
 );
 
 ALTER TABLE `Sub_Item` ADD FOREIGN KEY (`item_id`) REFERENCES `Item` (`id`);
@@ -134,9 +113,3 @@ ALTER TABLE `Point_Sub_Item` ADD FOREIGN KEY (`point_item_id`) REFERENCES `Point
 ALTER TABLE `Point_Sub_Item` ADD FOREIGN KEY (`sub_item_id`) REFERENCES `Sub_Item` (`id`);
 
 ALTER TABLE `Point_Sub_Item` ADD FOREIGN KEY (`collected_by`) REFERENCES `User` (`id`);
-
-ALTER TABLE `Health_Check_Spec_1` ADD FOREIGN KEY (`health_check_id`) REFERENCES `Health_Check` (`id`);
-
-ALTER TABLE `Health_Check_Spec_2` ADD FOREIGN KEY (`health_check_id`) REFERENCES `Health_Check` (`id`);
-
-ALTER TABLE `Health_Check_Child` ADD FOREIGN KEY (`health_check_id`) REFERENCES `Health_Check` (`id`);

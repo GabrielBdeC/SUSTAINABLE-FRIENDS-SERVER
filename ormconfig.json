@@ -4,7 +4,7 @@
   "port": 3306,
   "username": "",
   "password": "",
-  "database": "projetointegrador",
+  "database": "",
   "entities": ["dist/app/modules/*/models/*.entity.js"],
-  "synchronize": true
+  "synchronize": false
 }
