@@ -6,16 +6,18 @@ import { UsersModule } from './modules/user/user.module';
 import { AuthModule } from './shared/auth/auth.module';
 import { ErrorModule } from './shared/errors/error.module';
 import { PointModule } from './modules/point/point.module';
+import { ItemModule } from './modules/item/item.module';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot(),
-    HealthCheckModule,
-    UsersModule,
-    AuthModule,
-    ErrorModule,
     ConfigModule.forRoot(),
+    HealthCheckModule,
+    AuthModule,
+    UsersModule,
+    ErrorModule,
     PointModule,
+    ItemModule,
   ],
 })
 export class AppModule {}
