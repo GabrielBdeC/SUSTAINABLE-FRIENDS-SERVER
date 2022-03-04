@@ -4,7 +4,7 @@ import { ItemDto } from '../dtos/item.dto';
 import { Item } from '../models/item.entity';
 import { ItemService } from '../services/item.service';
 
-@Controller('api/v1/item')
+@Controller('item')
 export class ItemController {
   constructor(
     private itemService: ItemService,

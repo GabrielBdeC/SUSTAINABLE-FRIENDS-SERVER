@@ -7,7 +7,7 @@ import { CompanyUser } from '../models/company-user.entity';
 export class UserDataConverter {
   public toDto(entity: User): UserDto {
     const response: UserDto = {} as UserDto;
-    response.identifier = entity.getIdentifier();
+    response.identifier = entity.identifier;
     response.name = entity.getName();
     return response;
   }
@@ -28,7 +28,7 @@ export class UserDataConverter {
     }
 
     const identifier = uuidv4().replace(/-/g, '').toUpperCase(); // colocar no data converter
-    user.setIdentifier(identifier);
+    user.identifier = identifier;
 
     if (dto.cnpj) {
       const company = new CompanyUser();

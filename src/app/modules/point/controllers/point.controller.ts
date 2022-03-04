@@ -4,7 +4,7 @@ import { PointDto } from '../dtos/point.dto';
 import { Point } from '../models/point.entity';
 import { PointService } from '../services/point.service';
 
-@Controller('api/v1/point')
+@Controller('point')
 export class PointController {
   constructor(
     private pointService: PointService,
