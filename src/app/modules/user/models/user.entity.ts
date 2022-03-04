@@ -8,7 +8,6 @@ import {
   MaxLength,
   MinLength,
 } from 'class-validator';
-import { CompanyUser } from './company-user.entity';
 import { Base } from 'src/app/shared/models/base.entity';
 import { PersonalUser } from './personal-user.entity';
 
@@ -60,16 +59,15 @@ export class User extends Base {
   @IsString()
   protected password: string;
 
-  @OneToOne(() => CompanyUser, {
+  /* @OneToOne(() => CompanyUser, {
     cascade: true,
   })
   @JoinColumn()
-  public company: CompanyUser;
+  public company: CompanyUser; */
 
-  @OneToOne(() => PersonalUser, {
-    cascade: true,
+  @OneToOne(() => PersonalUser, (personal) => personal.user, {
+    nullable: true,
   })
-  @JoinColumn()
   public personal: PersonalUser;
 
   public getEmail(): string {
@@ -96,17 +94,17 @@ export class User extends Base {
     this.password = password;
   }
 
-  public getCompany(): string {
+  /* public getCompany(): string {
     return this.company.CNPJ;
   }
 
   public setCompany(company: CompanyUser): void {
     this.company = company;
-  }
+  } */
 
-  public getPersonal(): string {
-    return this.personal.getCPF();
-  }
+  /*public getPersonal(): string {
+    return this.personal();
+  }*/
 
   public setPersonal(personal: PersonalUser): void {
     this.personal = personal;
