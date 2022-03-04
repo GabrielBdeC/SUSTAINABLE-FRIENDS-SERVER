@@ -1,6 +1,7 @@
-export interface PointDto {
+import { BaseDto } from '../../../shared/dtos/base.dto';
+
+export interface PointDto extends BaseDto {
   latitude: number;
   longitude: number;
-  identifier: string;
   createTime: string;
 }

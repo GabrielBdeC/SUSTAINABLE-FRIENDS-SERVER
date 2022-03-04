@@ -13,7 +13,8 @@ Table Sub_Item {
 Table User {  
   email VARCHAR(84) [UNIQUE, not null, note: 'used as login']
   name VARCHAR(84) [not null]
-  password VARCHAR(128) [not null, note: 'SHA512']
+  password VARCHAR(128) [not null, note: 'ARGON2']
+  preferences JSON [not null]
   id BIGINT [pk, increment]
   identifier VARCHAR(32) [not null, note: 'used in DTO']
   create_time TIMESTAMP [not null, default: `CURRENT_TIMESTAMP()`]
