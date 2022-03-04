@@ -10,6 +10,7 @@ import {
 } from 'class-validator';
 import { CompanyUser } from './company-user.entity';
 import { Base } from 'src/app/shared/models/base.entity';
+import { PersonalUser } from './personal-user.entity';
 
 @Entity({
   name: 'User',
@@ -61,10 +62,15 @@ export class User extends Base {
 
   @OneToOne(() => CompanyUser, {
     cascade: true,
-    onDelete: 'CASCADE',
   })
   @JoinColumn()
-  protected company: CompanyUser;
+  public company: CompanyUser;
+
+  @OneToOne(() => PersonalUser, {
+    cascade: true,
+  })
+  @JoinColumn()
+  public personal: PersonalUser;
 
   public getEmail(): string {
     return this.email;
@@ -91,10 +97,18 @@ export class User extends Base {
   }
 
   public getCompany(): string {
-    return this.company.getCNPJ();
+    return this.company.CNPJ;
   }
 
   public setCompany(company: CompanyUser): void {
     this.company = company;
+  }
+
+  public getPersonal(): string {
+    return this.personal.getCPF();
+  }
+
+  public setPersonal(personal: PersonalUser): void {
+    this.personal = personal;
   }
 }

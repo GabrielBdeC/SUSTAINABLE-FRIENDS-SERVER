@@ -5,4 +5,5 @@ export interface UserDto extends BaseDto {
   email: string | undefined;
   password: string | undefined;
   cnpj: string | undefined;
+  cpf: string | undefined;
 }

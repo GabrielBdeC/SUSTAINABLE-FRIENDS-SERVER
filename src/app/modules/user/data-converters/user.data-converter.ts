@@ -3,6 +3,7 @@ import { User } from '../models/user.entity';
 import * as argon2 from 'argon2';
 import { v4 as uuidv4 } from 'uuid';
 import { CompanyUser } from '../models/company-user.entity';
+import { PersonalUser } from '../models/personal-user.entity';
 
 export class UserDataConverter {
   public toDto(entity: User): UserDto {
@@ -34,6 +35,10 @@ export class UserDataConverter {
       const company = new CompanyUser();
       company.setCNPJ(dto.cnpj);
       user.setCompany(company);
+    } else if (dto.cpf) {
+      const personal = new PersonalUser();
+      personal.setCPF(dto.cpf);
+      user.setPersonal(personal);
     }
 
     return user;

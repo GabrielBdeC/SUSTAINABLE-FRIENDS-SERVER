@@ -1,30 +1,39 @@
 import { Length } from 'class-validator';
-import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  OneToOne,
+  PrimaryColumn,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { User } from './user.entity';
 
 @Entity({
-  name: 'CompanyUser',
+  name: 'Company_User_Spec',
 })
 export class CompanyUser {
   @PrimaryGeneratedColumn({
-    name: 'id',
+    name: 'user_id',
     type: 'bigint',
   })
-  protected id: number;
+  protected _id: number;
+  get id(): number {
+    return this._id;
+  }
 
-  @OneToOne(() => User, { onDelete: 'CASCADE' })
+  @OneToOne(() => User)
   @Length(14)
   @Column({
-    name: 'cnpj',
+    name: 'national_identity',
     type: 'varchar',
     length: '14',
     unique: true,
     nullable: false,
     comment: 'cnpj',
   })
-  protected cnpj: string;
+  private cnpj: string;
 
-  public getCNPJ(): string {
+  get CNPJ(): string {
     return this.cnpj;
   }
 
