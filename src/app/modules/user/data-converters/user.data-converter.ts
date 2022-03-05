@@ -2,6 +2,8 @@ import { UserDto } from '../dtos/user.dto';
 import { User } from '../models/user.entity';
 import * as argon2 from 'argon2';
 import { v4 as uuidv4 } from 'uuid';
+import { CompanyUser } from '../models/company-user.entity';
+import { PersonalUser } from '../models/personal-user.entity';
 
 export class UserDataConverter {
   public toDto(entity: User): UserDto {
@@ -29,15 +31,33 @@ export class UserDataConverter {
     const identifier = uuidv4().replace(/-/g, '').toUpperCase(); // colocar no data converter
     user.identifier = identifier;
 
-    /* if (dto.cnpj) {
-      const company = new CompanyUser();
-      company.setCNPJ(dto.cnpj);
-      user.setCompany(company);
-    } else if (dto.cpf) {
+    const _preferences = {
+      items: [],
+    };
+    if (dto.preferences.items) {
+      const items = dto.preferences.items.filter((item) => {
+        if (item.active) {
+          const subItems = item.subItems.filter((subItem) => {
+            if (subItem.active) return subItem;
+          });
+          item.subItems = subItems;
+          return item;
+        }
+      });
+
+      _preferences.items = items;
+    }
+    user.setPreferences(_preferences);
+
+    if (dto.cpf) {
       const personal = new PersonalUser();
-      personal.cpf(dto.cpf);
+      personal.cpf = dto.cpf;
       user.setPersonal(personal);
-    } */
+    } else if (dto.cnpj) {
+      const company = new CompanyUser();
+      company.cnpj = dto.cnpj;
+      user.setCompany(company);
+    }
 
     return user;
   }

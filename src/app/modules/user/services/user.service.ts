@@ -32,8 +32,4 @@ export class UserService {
       return this.errorHandlerService.HandleDuplicateError(err);
     }
   }
-
-  // public async handleError(errors) {
-  //   return errors;
-  // }
 }

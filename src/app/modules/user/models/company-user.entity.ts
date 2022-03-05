@@ -2,6 +2,7 @@ import { Length } from 'class-validator';
 import {
   Column,
   Entity,
+  JoinColumn,
   OneToOne,
   PrimaryColumn,
   PrimaryGeneratedColumn,
@@ -12,16 +13,15 @@ import { User } from './user.entity';
   name: 'Company_User_Spec',
 })
 export class CompanyUser {
-  @PrimaryGeneratedColumn({
+  @PrimaryColumn({
     name: 'user_id',
-    type: 'bigint',
   })
-  protected _id: number;
-  get id(): number {
-    return this._id;
-  }
+  public id: number;
 
-  @OneToOne(() => User)
+  @OneToOne(() => User, (user) => user.company)
+  @JoinColumn({ name: `user_id` })
+  public user: User;
+
   @Length(14)
   @Column({
     name: 'national_identity',
@@ -31,13 +31,13 @@ export class CompanyUser {
     nullable: false,
     comment: 'cnpj',
   })
-  private cnpj: string;
+  protected _cnpj: string;
 
-  get CNPJ(): string {
-    return this.cnpj;
+  get cnpj(): string {
+    return this._cnpj;
   }
 
-  public setCNPJ(cnpj: string): void {
-    this.cnpj = cnpj;
+  public set cnpj(cnpj: string) {
+    this._cnpj = cnpj;
   }
 }

@@ -1,6 +1,10 @@
 import { Strategy } from 'passport-local';
 import { PassportStrategy } from '@nestjs/passport';
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { AuthService } from '../auth.service';
 import { User } from 'src/app/modules/user/models/user.entity';
 import { UserDto } from 'src/app/modules/user/dtos/user.dto';
@@ -20,7 +24,7 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
   async validate(email: string, password: string): Promise<UserDto> {
     const user = await this.authService.validateUser(email, password);
     if (!user) {
-      throw new UnauthorizedException();
+      throw new NotFoundException();
     }
     // const payload = { name: user.name, identifier: user.identifier };
     // user.jwt = this.jwtService.sign(payload);

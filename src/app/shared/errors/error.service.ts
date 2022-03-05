@@ -25,4 +25,17 @@ export class ErrorHandlerService {
       HttpStatus.BAD_REQUEST,
     );
   }
+
+  public async UserNotFoundError(error, email) {
+    throw new HttpException(
+      {
+        status: HttpStatus.NOT_FOUND,
+        error: {
+          error: 'Not Found',
+          message: `Could not find user with email \'${email}\'`,
+        },
+      },
+      HttpStatus.NOT_FOUND,
+    );
+  }
 }

@@ -1,6 +1,6 @@
 interface IItemsPreference {
   name: string;
-  active: true;
+  active: boolean;
   subItems?: ISubItemsPreference[];
 }
 interface ISubItemsPreference {

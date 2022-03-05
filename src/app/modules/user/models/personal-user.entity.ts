@@ -9,7 +9,7 @@ export class PersonalUser {
   @PrimaryColumn({ name: `user_id` })
   public id: number;
 
-  @OneToOne(() => User, (user) => user.personal)
+  @OneToOne(() => User, (user) => user.personal, { onDelete: 'CASCADE' })
   @JoinColumn({ name: `user_id` })
   public user: User;
 

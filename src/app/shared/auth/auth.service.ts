@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  HttpException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -10,6 +11,7 @@ import * as argon2 from 'argon2';
 import { UserDataConverter } from 'src/app/modules/user/data-converters/user.data-converter';
 import { UserDto } from 'src/app/modules/user/dtos/user.dto';
 import { JwtService } from '@nestjs/jwt';
+import { ErrorHandlerService } from '../errors/error.service';
 
 @Injectable()
 export class AuthService {
@@ -17,23 +19,25 @@ export class AuthService {
     @InjectRepository(User) private userRepository: Repository<User>,
     private userDataConverter: UserDataConverter,
     private jwtService: JwtService,
+    private errorHandlerService: ErrorHandlerService,
   ) {}
 
-  public async validateUser(email: string, password: string): Promise<UserDto> {
-    const user = await this.userRepository
-      .createQueryBuilder('user')
-      .where('user.email = :email', { email: email })
-      .getOneOrFail();
+  public async validateUser(
+    email: string,
+    password: string,
+  ): Promise<UserDto | any> {
+    try {
+      const user = await this.userRepository
+        .createQueryBuilder('user')
+        .where('user.email = :email', { email: email })
+        .getOneOrFail();
 
-    if (user) {
       if (await argon2.verify(user.getPassword(), password)) {
         const userDto = this.userDataConverter.toDto(user);
         return userDto;
-      } else {
-        throw new BadRequestException();
       }
-    } else {
-      throw new NotFoundException();
+    } catch (error) {
+      return this.errorHandlerService.UserNotFoundError(error, email);
     }
   }
 

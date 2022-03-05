@@ -8,11 +8,13 @@ import { User } from '../../modules/user/models/user.entity';
 import { JwtModule, JwtModuleOptions } from '@nestjs/jwt';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ErrorModule } from '../errors/error.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([User]),
     ConfigModule,
+    ErrorModule,
     forwardRef(() => UsersModule),
     PassportModule,
     JwtModule.registerAsync({

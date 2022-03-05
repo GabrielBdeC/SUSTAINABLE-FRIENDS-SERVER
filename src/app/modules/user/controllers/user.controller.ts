@@ -17,4 +17,10 @@ export class UserController {
   async getSingleUser(@Request() req) {
     return req.user;
   }
+
+  @UseGuards(JwtAuthGuard)
+  @Get(':id/preference')
+  async getPreferences(@Request() req) {
+    return req.user;
+  }
 }

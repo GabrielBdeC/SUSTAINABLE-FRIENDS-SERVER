@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, OneToOne } from 'typeorm';
+import { Column, Entity, OneToOne } from 'typeorm';
 
 import {
   IsEmail,
@@ -10,6 +10,7 @@ import {
 } from 'class-validator';
 import { Base } from 'src/app/shared/models/base.entity';
 import { PersonalUser } from './personal-user.entity';
+import { CompanyUser } from './company-user.entity';
 
 @Entity({
   name: 'User',
@@ -59,14 +60,29 @@ export class User extends Base {
   @IsString()
   protected password: string;
 
-  /* @OneToOne(() => CompanyUser, {
+  @Column({
+    type: 'json',
+    nullable: false,
+  })
+  protected preferences: JSON;
+
+  public getPreferences(): any {
+    return this.preferences;
+  }
+
+  public setPreferences(preferences: any) {
+    this.preferences = preferences;
+  }
+
+  @OneToOne(() => CompanyUser, (company) => company.user, {
+    nullable: true,
     cascade: true,
   })
-  @JoinColumn()
-  public company: CompanyUser; */
+  public company: CompanyUser;
 
   @OneToOne(() => PersonalUser, (personal) => personal.user, {
     nullable: true,
+    cascade: true,
   })
   public personal: PersonalUser;
 
@@ -94,13 +110,13 @@ export class User extends Base {
     this.password = password;
   }
 
-  /* public getCompany(): string {
-    return this.company.CNPJ;
+  public getCompany(): string {
+    return this.company.cnpj;
   }
 
   public setCompany(company: CompanyUser): void {
     this.company = company;
-  } */
+  }
 
   /*public getPersonal(): string {
     return this.personal();
