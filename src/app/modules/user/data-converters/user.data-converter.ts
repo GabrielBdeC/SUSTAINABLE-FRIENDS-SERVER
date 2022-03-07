@@ -10,6 +10,7 @@ export class UserDataConverter {
     const response: UserDto = {} as UserDto;
     response.identifier = entity.identifier;
     response.name = entity.getName();
+    response.preferences = entity.getPreferences();
     return response;
   }
 

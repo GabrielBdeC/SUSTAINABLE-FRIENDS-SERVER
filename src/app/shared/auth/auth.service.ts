@@ -1,9 +1,4 @@
-import {
-  BadRequestException,
-  HttpException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/app/modules/user/models/user.entity';
 import { Repository } from 'typeorm';
@@ -37,7 +32,9 @@ export class AuthService {
         return userDto;
       }
     } catch (error) {
-      return this.errorHandlerService.UserNotFoundError(error, email);
+      return this.errorHandlerService.UserNotFoundError(error, {
+        email: email,
+      });
     }
   }
 

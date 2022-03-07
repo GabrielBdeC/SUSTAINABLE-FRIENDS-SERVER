@@ -1,4 +1,12 @@
-import { Controller, Get, Request, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Request,
+  UseGuards,
+} from '@nestjs/common';
 import { JwtAuthGuard } from 'src/app/shared/auth/guards/jwt-auth.guard';
 import { User } from '../models/user.entity';
 import { UserService } from '../services/user.service';
@@ -20,7 +28,13 @@ export class UserController {
 
   @UseGuards(JwtAuthGuard)
   @Get(':id/preference')
-  async getPreferences(@Request() req) {
-    return req.user;
+  async getPreferences(@Param('id') userId: string) {
+    return this.userService.getPreferences(userId);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post(':id/preference')
+  async postPreference(@Param('id') userId: string, @Body() body) {
+    // return this.userService.postPreference(userId, body.preferences);
   }
 }

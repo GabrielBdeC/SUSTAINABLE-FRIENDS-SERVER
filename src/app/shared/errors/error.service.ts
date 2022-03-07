@@ -26,16 +26,32 @@ export class ErrorHandlerService {
     );
   }
 
-  public async UserNotFoundError(error, email) {
-    throw new HttpException(
-      {
-        status: HttpStatus.NOT_FOUND,
-        error: {
-          error: 'Not Found',
-          message: `Could not find user with email \'${email}\'`,
+  public async UserNotFoundError(error, parameters) {
+    parameters.email = parameters.email || undefined;
+    parameters.identifier = parameters.identifier || undefined;
+
+    if (parameters.email) {
+      throw new HttpException(
+        {
+          status: HttpStatus.NOT_FOUND,
+          error: {
+            error: 'Not Found',
+            message: `Could not find user with email \'${parameters.email}\'`,
+          },
         },
-      },
-      HttpStatus.NOT_FOUND,
-    );
+        HttpStatus.NOT_FOUND,
+      );
+    } else if (parameters.identifier) {
+      throw new HttpException(
+        {
+          status: HttpStatus.NOT_FOUND,
+          error: {
+            error: 'Not Found',
+            message: `Could not find user with email \'${parameters.identifier}\'`,
+          },
+        },
+        HttpStatus.NOT_FOUND,
+      );
+    }
   }
 }

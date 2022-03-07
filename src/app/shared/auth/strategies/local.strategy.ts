@@ -11,7 +11,7 @@ import { UserDto } from 'src/app/modules/user/dtos/user.dto';
 import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
-export class LocalStrategy extends PassportStrategy(Strategy) {
+export class LocalStrategy extends PassportStrategy(Strategy, 'local') {
   constructor(
     private authService: AuthService,
     private jwtService: JwtService,
