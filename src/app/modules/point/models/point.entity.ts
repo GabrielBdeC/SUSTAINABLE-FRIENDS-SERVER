@@ -1,19 +1,11 @@
 import { Base } from 'src/app/shared/models/base.entity';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
+import { User } from '../../user/models/user.entity';
 
 @Entity({
   name: 'Point',
 })
 export class Point extends Base {
-  @PrimaryGeneratedColumn({ name: 'id', type: 'bigint' })
-  protected _id: number;
-  get id(): number {
-    return this._id;
-  }
-  set id(id: number) {
-    this._id = id;
-  }
-
   @Column({
     name: 'latitude',
     type: 'decimal',
@@ -40,5 +32,25 @@ export class Point extends Base {
   }
   set longitude(longitude: number) {
     this._longitude = longitude;
+  }
+
+  @ManyToOne(() => User, (user) => user.point)
+  @JoinColumn({ name: 'user_id' })
+  public _user: User;
+  get user(): User {
+    return this._user;
+  }
+  set user(user: User) {
+    this._user = user;
+  }
+
+  @ManyToOne(() => User, (changedBy) => changedBy.point)
+  @JoinColumn({ name: 'changed_by' })
+  public _changedBy: User;
+  get changedBy(): User {
+    return this._changedBy;
+  }
+  set changedBy(changedBy: User) {
+    this._changedBy = changedBy;
   }
 }

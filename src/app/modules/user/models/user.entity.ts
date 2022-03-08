@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, OneToOne } from 'typeorm';
+import { Column, Entity, JoinColumn, OneToMany, OneToOne } from 'typeorm';
 
 import {
   IsEmail,
@@ -10,6 +10,7 @@ import {
 } from 'class-validator';
 import { CompanyUser } from './company-user.entity';
 import { Base } from 'src/app/shared/models/base.entity';
+import { Point } from '../../point/models/point.entity';
 
 @Entity({
   name: 'User',
@@ -59,12 +60,23 @@ export class User extends Base {
   @IsString()
   protected password: string;
 
-  @OneToOne(() => CompanyUser, {
-    cascade: true,
-    onDelete: 'CASCADE',
-  })
-  @JoinColumn()
-  protected company: CompanyUser;
+  @OneToMany(() => Point, (point) => point._user)
+  public _point: Point[];
+  get point(): Point[] {
+    return this._point;
+  }
+  set point(point: Point[]) {
+    this._point = point;
+  }
+
+  @OneToMany(() => Point, (pointChangedBy) => pointChangedBy._changedBy)
+  public _pointChangedBy: Point[];
+  get pointChangedBy(): Point[] {
+    return this._pointChangedBy;
+  }
+  set pointChangedBy(pointChangedBy: Point[]) {
+    this._pointChangedBy = pointChangedBy;
+  }
 
   public getEmail(): string {
     return this.email;
@@ -90,11 +102,4 @@ export class User extends Base {
     this.password = password;
   }
 
-  public getCompany(): string {
-    return this.company.getCNPJ();
-  }
-
-  public setCompany(company: CompanyUser): void {
-    this.company = company;
-  }
 }

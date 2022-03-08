@@ -33,7 +33,6 @@ export class UserDataConverter {
     if (dto.cnpj) {
       const company = new CompanyUser();
       company.setCNPJ(dto.cnpj);
-      user.setCompany(company);
     }
 
     return user;
