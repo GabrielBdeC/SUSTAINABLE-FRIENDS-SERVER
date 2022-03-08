@@ -72,10 +72,6 @@ export class UserDataConverter {
     if (preferences.items) {
       const items = preferences.items.filter((item) => {
         if (item.active) {
-          const subItems = item.subItems.filter((subItem) => {
-            if (subItem.active) return subItem;
-          });
-          item.subItems = subItems;
           return item;
         }
       });
