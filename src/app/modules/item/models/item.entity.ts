@@ -1,12 +1,4 @@
-import {
-  Column,
-  Entity,
-  ManyToMany,
-  ManyToOne,
-  OneToMany,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
-import { SubItem } from './sub-item.entity';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity({
   name: 'Item',
@@ -33,14 +25,5 @@ export class Item {
   }
   set name(name: string) {
     this._name = name;
-  }
-
-  @OneToMany(() => SubItem, (subItem) => subItem._item)
-  private _subItems: SubItem[];
-  get subItems(): SubItem[] {
-    return this._subItems;
-  }
-  set subItem(subItems: SubItem[]) {
-    this._subItems = subItems;
   }
 }
