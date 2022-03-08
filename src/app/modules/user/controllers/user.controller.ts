@@ -21,20 +21,23 @@ export class UserController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @Get('preference')
+  async getPreferences(@Request() req) {
+    return this.userService.getPreferences(req.user.identifier);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('preference')
+  async postPreference(@Body() body, @Request() req) {
+    return this.userService.postPreference(
+      req.user.identifier,
+      body.preferences,
+    );
+  }
+
+  @UseGuards(JwtAuthGuard)
   @Get(':id')
   async getSingleUser(@Request() req) {
     return req.user;
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @Get(':id/preference')
-  async getPreferences(@Param('id') userId: string) {
-    return this.userService.getPreferences(userId);
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @Post(':id/preference')
-  async postPreference(@Param('id') userId: string, @Body() body) {
-    // return this.userService.postPreference(userId, body.preferences);
   }
 }

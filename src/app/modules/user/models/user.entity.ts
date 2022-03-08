@@ -11,6 +11,7 @@ import {
 import { Base } from 'src/app/shared/models/base.entity';
 import { PersonalUser } from './personal-user.entity';
 import { CompanyUser } from './company-user.entity';
+import { IPreferences } from '../constants/preferences.constant';
 
 @Entity({
   name: 'User',
@@ -61,17 +62,18 @@ export class User extends Base {
   protected password: string;
 
   @Column({
+    name: 'preferences',
     type: 'json',
     nullable: false,
   })
-  protected preferences: JSON;
+  protected _preferences: IPreferences;
 
-  public getPreferences(): any {
-    return this.preferences;
+  get preferences(): IPreferences {
+    return this._preferences;
   }
 
-  public setPreferences(preferences: any) {
-    this.preferences = preferences;
+  set preferences(preferences: IPreferences) {
+    this._preferences = preferences;
   }
 
   @OneToOne(() => CompanyUser, (company) => company.user, {
