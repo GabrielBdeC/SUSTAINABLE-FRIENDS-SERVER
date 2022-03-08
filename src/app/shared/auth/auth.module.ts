@@ -8,11 +8,13 @@ import { User } from '../../modules/user/models/user.entity';
 import { JwtModule, JwtModuleOptions } from '@nestjs/jwt';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ErrorModule } from '../errors/error.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([User]),
-    ConfigModule,
+    ConfigModule.forRoot(),
+    ErrorModule,
     forwardRef(() => UsersModule),
     PassportModule,
     JwtModule.registerAsync({
@@ -21,7 +23,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
         const options: JwtModuleOptions = {
           secret: configService.get('JWT_SECRET'),
           signOptions: {
-            expiresIn: '60s',
+            expiresIn: '2h', // changed the expiration limit for better testing
             // algorithm: 'RS256',
           },
         };

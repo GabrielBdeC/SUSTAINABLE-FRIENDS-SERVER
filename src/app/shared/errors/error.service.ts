@@ -14,15 +14,43 @@ export class ErrorHandlerService {
 
   public async HandleDuplicateError(error) {
     const { parameters } = error;
-    const email = parameters[0];
+    const duplicate_entry = parameters[1];
 
     throw new HttpException(
       {
         status: HttpStatus.BAD_REQUEST,
-        // error: `\'${email}\' is already been used. Please choose another.`,
-        error: error,
+        error: `\'${duplicate_entry}\' has already been used. Please choose another.`,
       },
       HttpStatus.BAD_REQUEST,
     );
+  }
+
+  public async UserNotFoundError(error, parameters) {
+    parameters.email = parameters.email || undefined;
+    parameters.identifier = parameters.identifier || undefined;
+
+    if (parameters.email) {
+      throw new HttpException(
+        {
+          status: HttpStatus.NOT_FOUND,
+          error: {
+            error: 'Not Found',
+            message: `Could not find user with email \'${parameters.email}\'`,
+          },
+        },
+        HttpStatus.NOT_FOUND,
+      );
+    } else if (parameters.identifier) {
+      throw new HttpException(
+        {
+          status: HttpStatus.NOT_FOUND,
+          error: {
+            error: 'Not Found',
+            message: `Could not find user with identifier \'${parameters.identifier}\'`,
+          },
+        },
+        HttpStatus.NOT_FOUND,
+      );
+    }
   }
 }

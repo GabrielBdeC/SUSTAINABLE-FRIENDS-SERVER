@@ -11,7 +11,7 @@ import { ItemModule } from './modules/item/item.module';
 @Module({
   imports: [
     TypeOrmModule.forRoot(),
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot({ isGlobal: true }),
     HealthCheckModule,
     AuthModule,
     UsersModule,

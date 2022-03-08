@@ -1,5 +1,4 @@
-import { Column, Entity, JoinColumn, OneToMany, OneToOne } from 'typeorm';
-
+import { Column, Entity, OneToMany, OneToOne } from 'typeorm';
 import {
   IsEmail,
   IsNotEmpty,
@@ -8,8 +7,10 @@ import {
   MaxLength,
   MinLength,
 } from 'class-validator';
-import { CompanyUser } from './company-user.entity';
 import { Base } from 'src/app/shared/models/base.entity';
+import { PersonalUser } from './personal-user.entity';
+import { CompanyUser } from './company-user.entity';
+import { IPreferences } from '../constants/preferences.constant';
 import { Point } from '../../point/models/point.entity';
 
 @Entity({
@@ -60,6 +61,32 @@ export class User extends Base {
   @IsString()
   protected password: string;
 
+  @Column({
+    name: 'preferences',
+    type: 'json',
+    nullable: false,
+  })
+  protected _preferences: IPreferences;
+
+  get preferences(): IPreferences {
+    return this._preferences;
+  }
+
+  set preferences(preferences: IPreferences) {
+    this._preferences = preferences;
+  }
+
+  @OneToOne(() => CompanyUser, (company) => company.user, {
+    nullable: true,
+    cascade: true,
+  })
+  public company: CompanyUser;
+
+  @OneToOne(() => PersonalUser, (personal) => personal.user, {
+    nullable: true,
+    cascade: true,
+  })
+  public personal: PersonalUser;
   @OneToMany(() => Point, (point) => point._user)
   public _point: Point[];
   get point(): Point[] {
@@ -102,4 +129,19 @@ export class User extends Base {
     this.password = password;
   }
 
+  public getCompany(): string {
+    return this.company.cnpj;
+  }
+
+  public setCompany(company: CompanyUser): void {
+    this.company = company;
+  }
+
+  /*public getPersonal(): string {
+    return this.personal();
+  }*/
+
+  public setPersonal(personal: PersonalUser): void {
+    this.personal = personal;
+  }
 }
