@@ -12,7 +12,6 @@ export class ItemService {
   public async getAll(): Promise<Item[]> {
     return this.itemRepository.find({
       cache: true,
-      relations: ['_subItems'],
     });
   }
 }

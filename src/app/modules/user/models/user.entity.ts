@@ -1,5 +1,4 @@
-import { Column, Entity, OneToOne } from 'typeorm';
-
+import { Column, Entity, OneToMany, OneToOne } from 'typeorm';
 import {
   IsEmail,
   IsNotEmpty,
@@ -12,6 +11,7 @@ import { Base } from 'src/app/shared/models/base.entity';
 import { PersonalUser } from './personal-user.entity';
 import { CompanyUser } from './company-user.entity';
 import { IPreferences } from '../constants/preferences.constant';
+import { Point } from '../../point/models/point.entity';
 
 @Entity({
   name: 'User',
@@ -87,6 +87,23 @@ export class User extends Base {
     cascade: true,
   })
   public personal: PersonalUser;
+  @OneToMany(() => Point, (point) => point._user)
+  public _point: Point[];
+  get point(): Point[] {
+    return this._point;
+  }
+  set point(point: Point[]) {
+    this._point = point;
+  }
+
+  @OneToMany(() => Point, (pointChangedBy) => pointChangedBy._changedBy)
+  public _pointChangedBy: Point[];
+  get pointChangedBy(): Point[] {
+    return this._pointChangedBy;
+  }
+  set pointChangedBy(pointChangedBy: Point[]) {
+    this._pointChangedBy = pointChangedBy;
+  }
 
   public getEmail(): string {
     return this.email;

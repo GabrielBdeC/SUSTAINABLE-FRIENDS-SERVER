@@ -12,11 +12,12 @@ export class PointController {
   ) {}
 
   @Get()
-  public async getAll(): Promise<PointDto[]> {
-    return this.pointService.getAll().then((listPoint: Point[]) => {
+  public async getAll(): Promise<Point[]> {
+    return this.pointService.getAll();
+    /* return this.pointService.getAll().then((listPoint: Point[]) => {
       return listPoint.map((point: Point) => {
         return this.pointDataConverter.toDto(point);
       });
-    });
+    }); */
   }
 }

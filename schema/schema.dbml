@@ -5,11 +5,6 @@ Table Item {
   name VARCHAR(84) [not null]
   id BIGINT [pk, increment]
 }
-Table Sub_Item {
-  item_id BIGINT [not null, ref: > Item.id]
-  name VARCHAR(84) [not null]
-  id BIGINT [pk, increment]
-}
 Table User {  
   email VARCHAR(84) [UNIQUE, not null, note: 'used as login']
   name VARCHAR(84) [not null]
@@ -53,17 +48,6 @@ Table Delivery_Point_Spec {
 Table Point_Item {  
   point_id BIGINT [not null, ref: > Point.id]
   item_id BIGINT [not null, ref: > Item.id]
-  collected_by BIGINT [ref: > User.id]
-  collected_time TIMESTAMP
-  id BIGINT [pk, increment]
-  identifier VARCHAR(32) [not null, note: 'used in DTO']
-  create_time TIMESTAMP [not null, default: `CURRENT_TIMESTAMP()`]
-  changed_time TIMESTAMP
-  deleted_time TIMESTAMP
-}
-Table Point_Sub_Item {
-  point_item_id BIGINT [not null, ref: > Point_Item.id]
-  sub_item_id BIGINT [not null, ref: > Sub_Item.id]
   collected_by BIGINT [ref: > User.id]
   collected_time TIMESTAMP
   id BIGINT [pk, increment]
