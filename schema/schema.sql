@@ -1,11 +1,17 @@
-DROP TABLE IF EXISTS `Item` CASCADE;
+DROP DATABASE IF EXISTS sf;
+
+CREATE DATABASE sf;
+
+USE sf;
+
+DROP TABLE IF EXISTS `Item`;
 CREATE TABLE `Item` (
   `name` VARCHAR(84) NOT NULL,
   `id` BIGINT PRIMARY KEY AUTO_INCREMENT
 );
 
 
-DROP TABLE IF EXISTS `User` CASCADE;
+DROP TABLE IF EXISTS `User`;
 CREATE TABLE `User` (
   `email` VARCHAR(84) UNIQUE NOT NULL COMMENT 'used as login',
   `name` VARCHAR(84) NOT NULL,
@@ -18,19 +24,19 @@ CREATE TABLE `User` (
   `deleted_time` TIMESTAMP
 );
 
-DROP TABLE IF EXISTS `Personal_User_Spec` CASCADE;
+DROP TABLE IF EXISTS `Personal_User_Spec`;
 CREATE TABLE `Personal_User_Spec` (
   `user_id` BIGINT PRIMARY KEY,
   `national_identity` VARCHAR(11) UNIQUE NOT NULL COMMENT 'cpf'
 );
 
-DROP TABLE IF EXISTS `Company_User_Spec` CASCADE;
+DROP TABLE IF EXISTS `Company_User_Spec`;
 CREATE TABLE `Company_User_Spec` (
   `user_id` BIGINT PRIMARY KEY,
   `national_identity` VARCHAR(14) UNIQUE NOT NULL COMMENT 'cnpj'
 );
 
-DROP TABLE IF EXISTS `Point` CASCADE;
+DROP TABLE IF EXISTS `Point`;
 CREATE TABLE `Point` (
   `user_id` BIGINT NOT NULL,
   `latitude` DECIMAL(9,6) NOT NULL,
@@ -44,20 +50,20 @@ CREATE TABLE `Point` (
   `deleted_time` TIMESTAMP
 );
 
-DROP TABLE IF EXISTS `Collect_Point_Spec` CASCADE;
+DROP TABLE IF EXISTS `Collect_Point_Spec`;
 CREATE TABLE `Collect_Point_Spec` (
   `point_id` BIGINT PRIMARY KEY,
   `changed_by` BIGINT,
   `deleted_by` BIGINT
 );
 
-DROP TABLE IF EXISTS `Delivery_Point_Spec` CASCADE;
+DROP TABLE IF EXISTS `Delivery_Point_Spec`;
 CREATE TABLE `Delivery_Point_Spec` (
   `point_id` BIGINT PRIMARY KEY,
   `description` TEXT
 );
 
-DROP TABLE IF EXISTS `Point_Item` CASCADE;
+DROP TABLE IF EXISTS `Point_Item`;
 CREATE TABLE `Point_Item` (
   `point_id` BIGINT NOT NULL,
   `item_id` BIGINT NOT NULL,
@@ -70,7 +76,7 @@ CREATE TABLE `Point_Item` (
   `deleted_time` TIMESTAMP
 );
 
-DROP TABLE IF EXISTS `Health_Check` CASCADE;
+DROP TABLE IF EXISTS `Health_Check`;
 CREATE TABLE `Health_Check` (
   `id` INT PRIMARY KEY AUTO_INCREMENT
 );
