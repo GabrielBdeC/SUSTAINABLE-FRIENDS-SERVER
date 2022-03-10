@@ -11,7 +11,7 @@ export class PointService {
 
   public async getAll(): Promise<Point[]> {
     return this.pointRepository.find({
-      relations: ['_user', '_changedBy'],
+      relations: ['_user', '_changedBy', '_collectPoint'],
     });
   }
 }

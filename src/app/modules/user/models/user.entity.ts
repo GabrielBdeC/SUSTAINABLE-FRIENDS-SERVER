@@ -87,6 +87,7 @@ export class User extends Base {
     cascade: true,
   })
   public personal: PersonalUser;
+
   @OneToMany(() => Point, (point) => point._user)
   public _point: Point[];
   get point(): Point[] {

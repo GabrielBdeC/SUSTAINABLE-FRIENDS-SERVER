@@ -1,6 +1,7 @@
 import { Base } from 'src/app/shared/models/base.entity';
-import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToOne } from 'typeorm';
 import { User } from '../../user/models/user.entity';
+import { CollectPoint } from './collect-point.entity';
 
 @Entity({
   name: 'Point',
@@ -53,4 +54,10 @@ export class Point extends Base {
   set changedBy(changedBy: User) {
     this._changedBy = changedBy;
   }
+
+  @OneToOne(() => CollectPoint, (collectPoint) => collectPoint.point, {
+    nullable: true,
+    cascade: true,
+  })
+  public _collectPoint: CollectPoint;
 }
