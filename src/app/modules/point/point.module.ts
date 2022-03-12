@@ -5,9 +5,12 @@ import { PointDataConverter } from './data-converters/point.data-converter';
 import { Point } from './models/point.entity';
 import { CollectPoint } from './models/collect-point.entity';
 import { PointService } from './services/point.service';
+import { UserService } from '../user/services/user.service';
+import { UsersModule } from '../user/user.module';
+import { User } from '../user/models/user.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Point, CollectPoint])],
+  imports: [TypeOrmModule.forFeature([Point, CollectPoint, User]), UsersModule],
   controllers: [PointController],
   providers: [PointService, PointDataConverter],
 })

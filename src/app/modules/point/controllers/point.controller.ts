@@ -1,5 +1,14 @@
-import { Controller, Get } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Request,
+  UseGuards,
+} from '@nestjs/common';
+import { JwtAuthGuard } from 'src/app/shared/auth/guards/jwt-auth.guard';
 import { PointDataConverter } from '../data-converters/point.data-converter';
+import { CreatePointDto } from '../dtos/create-point.dto';
 import { PointDto } from '../dtos/point.dto';
 import { Point } from '../models/point.entity';
 import { PointService } from '../services/point.service';
@@ -19,5 +28,14 @@ export class PointController {
         return this.pointDataConverter.toDto(point);
       });
     }); */
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post()
+  public async createPoint(
+    @Body() body: CreatePointDto,
+    @Request() req,
+  ): Promise<any> {
+    return this.pointService.createPoint(body, req.user.identifier);
   }
 }

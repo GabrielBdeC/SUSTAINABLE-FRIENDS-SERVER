@@ -2,6 +2,7 @@ import { Base } from 'src/app/shared/models/base.entity';
 import { Column, Entity, JoinColumn, ManyToOne, OneToOne } from 'typeorm';
 import { User } from '../../user/models/user.entity';
 import { CollectPoint } from './collect-point.entity';
+import { DeliveryPoint } from './delivery-point.entity';
 
 @Entity({
   name: 'Point',
@@ -60,4 +61,10 @@ export class Point extends Base {
     cascade: true,
   })
   public _collectPoint: CollectPoint;
+
+  @OneToOne(() => DeliveryPoint, (deliveryPoint) => deliveryPoint.point, {
+    nullable: true,
+    cascade: true,
+  })
+  public _deliveryPoint: DeliveryPoint;
 }

@@ -88,7 +88,10 @@ export class User extends Base {
   })
   public personal: PersonalUser;
 
-  @OneToMany(() => Point, (point) => point._user)
+  @OneToMany(() => Point, (point) => point._user, {
+    cascade: true,
+    nullable: true,
+  })
   public _point: Point[];
   get point(): Point[] {
     return this._point;
@@ -97,7 +100,10 @@ export class User extends Base {
     this._point = point;
   }
 
-  @OneToMany(() => Point, (pointChangedBy) => pointChangedBy._changedBy)
+  @OneToMany(() => Point, (pointChangedBy) => pointChangedBy._changedBy, {
+    cascade: true,
+    nullable: true,
+  })
   public _pointChangedBy: Point[];
   get pointChangedBy(): Point[] {
     return this._pointChangedBy;
@@ -130,17 +136,17 @@ export class User extends Base {
     this.password = password;
   }
 
-  public getCompany(): string {
-    return this.company.cnpj;
+  public getCompany(): CompanyUser {
+    return this.company;
   }
 
   public setCompany(company: CompanyUser): void {
     this.company = company;
   }
 
-  /*public getPersonal(): string {
-    return this.personal();
-  }*/
+  public getPersonal(): PersonalUser {
+    return this.personal;
+  }
 
   public setPersonal(personal: PersonalUser): void {
     this.personal = personal;

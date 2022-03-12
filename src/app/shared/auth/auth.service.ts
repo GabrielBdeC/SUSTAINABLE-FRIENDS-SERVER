@@ -24,6 +24,8 @@ export class AuthService {
     try {
       const user = await this.userRepository
         .createQueryBuilder('user')
+        .leftJoinAndSelect('user.personal', 'personal')
+        .leftJoinAndSelect('user.company', 'company')
         .where('user.email = :email', { email: email })
         .getOneOrFail();
 
@@ -44,6 +46,7 @@ export class AuthService {
       access_token: await this.jwtService.signAsync(payload),
       name: userDto.name,
       identifier: userDto.identifier,
+      isPersonal: userDto.isPersonal,
     };
   }
 }

@@ -10,6 +10,7 @@ import { AuthService } from 'src/app/shared/auth/auth.service';
 import { JwtAuthGuard } from 'src/app/shared/auth/guards/jwt-auth.guard';
 import { LocalAuthGuard } from 'src/app/shared/auth/guards/local-auth.guard';
 import { UserDataConverter } from '../data-converters/user.data-converter';
+import { LoginUserDto } from '../dtos/loginUser.dto';
 import { UserDto } from '../dtos/user.dto';
 import { UserService } from '../services/user.service';
 
