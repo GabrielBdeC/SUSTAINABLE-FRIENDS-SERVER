@@ -81,12 +81,26 @@ export class User extends Base {
     cascade: true,
   })
   public company: CompanyUser;
+  public getCompany(): CompanyUser {
+    return this.company;
+  }
+
+  public setCompany(company: CompanyUser): void {
+    this.company = company;
+  }
 
   @OneToOne(() => PersonalUser, (personal) => personal.user, {
     nullable: true,
     cascade: true,
   })
   public personal: PersonalUser;
+  public getPersonal(): PersonalUser {
+    return this.personal;
+  }
+
+  public setPersonal(personal: PersonalUser): void {
+    this.personal = personal;
+  }
 
   @OneToMany(() => Point, (point) => point._user, {
     cascade: true,
@@ -134,21 +148,5 @@ export class User extends Base {
 
   public setPassword(password: string) {
     this.password = password;
-  }
-
-  public getCompany(): CompanyUser {
-    return this.company;
-  }
-
-  public setCompany(company: CompanyUser): void {
-    this.company = company;
-  }
-
-  public getPersonal(): PersonalUser {
-    return this.personal;
-  }
-
-  public setPersonal(personal: PersonalUser): void {
-    this.personal = personal;
   }
 }

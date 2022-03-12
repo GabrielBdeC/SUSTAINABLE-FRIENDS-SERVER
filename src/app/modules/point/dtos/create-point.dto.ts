@@ -3,6 +3,6 @@ import { PointItemDto } from './point-item.dto';
 export interface CreatePointDto {
   latitude: number;
   longitude: number;
-  items?: PointItemDto[];
+  items?: number[];
   description?: string;
 }

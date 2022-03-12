@@ -17,9 +17,8 @@ export class PointDataConverter {
     point.identifier = identifier;
 
     if (user.getPersonal()) {
-      // const collectPoint = new CollectPoint();
-      // collectPoint.point = point;
-      // point._collectPoint = collectPoint;
+      const collectPoint = new CollectPoint();
+      point._collectPoint = collectPoint;
     } else {
       const deliveryPoint = new DeliveryPoint();
       deliveryPoint.description = dto.description;

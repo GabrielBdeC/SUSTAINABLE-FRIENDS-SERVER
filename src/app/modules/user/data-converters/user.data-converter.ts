@@ -39,17 +39,17 @@ export class UserDataConverter {
     const identifier = uuidv4().replace(/-/g, '').toUpperCase();
     user.identifier = identifier;
 
-    // if (!dto.cnpj && !dto.cpf) {
-    //   throw new HttpException(
-    //     {
-    //       status: HttpStatus.BAD_REQUEST,
-    //       error: {
-    //         message: 'The user must have either a CPF or CNPJ',
-    //       },
-    //     },
-    //     HttpStatus.BAD_REQUEST,
-    //   );
-    // }
+    if (!dto.cnpj && !dto.cpf) {
+      throw new HttpException(
+        {
+          status: HttpStatus.BAD_REQUEST,
+          error: {
+            message: 'The user must have either a CPF or CNPJ',
+          },
+        },
+        HttpStatus.BAD_REQUEST,
+      );
+    }
 
     user.preferences = await this.handlePreferences(dto.preferences);
 
@@ -57,7 +57,6 @@ export class UserDataConverter {
       const personal = new PersonalUser();
       personal.cpf = dto.cpf;
       user.setPersonal(personal);
-      // user.preferences = await this.handlePreferences(dto.preferences);
     } else if (dto.cnpj) {
       const company = new CompanyUser();
       company.cnpj = dto.cnpj;

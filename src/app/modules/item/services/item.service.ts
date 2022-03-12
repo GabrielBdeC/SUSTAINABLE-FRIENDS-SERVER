@@ -14,4 +14,14 @@ export class ItemService {
       cache: true,
     });
   }
+
+  public async getItemsFromIds(items): Promise<Item[]> {
+    const _items = await this.itemRepository
+      .createQueryBuilder('item')
+      // .innerJoinAndSelect('item.point_id', 'point')
+      .where('item.id IN (:...items)', { items: items })
+      .getMany();
+
+    return _items;
+  }
 }

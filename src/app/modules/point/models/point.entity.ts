@@ -1,5 +1,13 @@
 import { Base } from 'src/app/shared/models/base.entity';
-import { Column, Entity, JoinColumn, ManyToOne, OneToOne } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  OneToOne,
+} from 'typeorm';
+import { Item } from '../../item/models/item.entity';
 import { User } from '../../user/models/user.entity';
 import { CollectPoint } from './collect-point.entity';
 import { DeliveryPoint } from './delivery-point.entity';
@@ -67,4 +75,15 @@ export class Point extends Base {
     cascade: true,
   })
   public _deliveryPoint: DeliveryPoint;
+
+  @OneToMany(() => Item, (item) => item._point, {
+    cascade: true,
+  })
+  public _items: Item[];
+  get items(): Item[] {
+    return this._items;
+  }
+  set items(items: Item[]) {
+    this._items = items;
+  }
 }
