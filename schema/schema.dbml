@@ -36,11 +36,6 @@ Table Point {
   changed_time TIMESTAMP
   deleted_time TIMESTAMP
 }
-Table Collect_Point_Spec {
-  point_id BIGINT [pk, ref: - Point.id]
-  changed_by BIGINT [ref: > User.id]
-  deleted_by BIGINT [ref: > User.id]
-}
 Table Delivery_Point_Spec {
   point_id BIGINT [pk, ref: - Point.id]
   description TEXT

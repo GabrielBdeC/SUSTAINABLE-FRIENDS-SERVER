@@ -10,7 +10,8 @@ import { ItemService } from '../../item/services/item.service';
 import { DeliveryPoint } from '../models/delivery-point.entity';
 import { PointItem } from '../models/ point-item.entity';
 import { PointItemDataConverter } from '../data-converters/point-item.data-converter';
-import { CollectPoint } from '../models/collect-point.entity';
+import { Item } from '../../item/models/item.entity';
+import { ErrorHandlerService } from 'src/app/shared/errors/error.service';
 
 @Injectable()
 export class PointService {
@@ -21,6 +22,7 @@ export class PointService {
     private pointItemDataConverter: PointItemDataConverter,
     private userService: UserService,
     private itemService: ItemService,
+    private errorHandlerService: ErrorHandlerService,
   ) {}
 
   public async getAll(): Promise<Point[]> {
@@ -31,8 +33,11 @@ export class PointService {
 
   public async createPoint(pointDto: CreatePointDto, identifier: string) {
     const user: User = await this.userService.findOne(identifier);
+    // TODO: handle exceptions
     const point: Point = this.pointDataConverter.toEntity(pointDto);
-    const items = await this.itemService.getItemsFromIds(pointDto.items);
+    const items: Item[] = await this.itemService.getItemsFromIds(
+      pointDto.items,
+    );
 
     point.user = user;
 
@@ -47,15 +52,14 @@ export class PointService {
     }
     point.pointItems = pointItems;
 
-    // checks if user is company or personal
-    // TODO: need to handle if the user is not correct.
     if (user.getCompany()) {
       const deliveryPoint: DeliveryPoint = new DeliveryPoint();
       deliveryPoint.description = pointDto.description;
       point.deliveryPoint = deliveryPoint;
-    } else if (user.getPersonal()) {
-      const collectPoint: CollectPoint = new CollectPoint();
-      point.collectPoint = collectPoint;
+    }
+
+    if (user.getPersonal() && pointDto.description) {
+      return this.errorHandlerService.InappropriateUser();
     }
 
     const new_point = await this.pointRepository.save(point);

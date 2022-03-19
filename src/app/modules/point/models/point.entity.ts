@@ -7,10 +7,8 @@ import {
   OneToMany,
   OneToOne,
 } from 'typeorm';
-import { Item } from '../../item/models/item.entity';
 import { User } from '../../user/models/user.entity';
 import { PointItem } from './ point-item.entity';
-import { CollectPoint } from './collect-point.entity';
 import { DeliveryPoint } from './delivery-point.entity';
 
 @Entity({
@@ -65,19 +63,6 @@ export class Point extends Base {
   }
   set changedBy(changedBy: User) {
     this._changedBy = changedBy;
-  }
-
-  // collectPoint
-  @OneToOne(() => CollectPoint, (collectPoint) => collectPoint.point, {
-    nullable: true,
-    cascade: true,
-  })
-  public _collectPoint: CollectPoint;
-  public get collectPoint(): CollectPoint {
-    return this._collectPoint;
-  }
-  public set collectPoint(collectPoint: CollectPoint) {
-    this._collectPoint = collectPoint;
   }
 
   // delivery point

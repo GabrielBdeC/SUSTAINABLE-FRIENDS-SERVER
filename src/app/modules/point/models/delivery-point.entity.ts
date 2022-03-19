@@ -5,10 +5,12 @@ import { Column, Entity, JoinColumn, OneToOne, PrimaryColumn } from 'typeorm';
   name: 'Delivery_Point_Spec',
 })
 export class DeliveryPoint {
-  @PrimaryColumn({ name: `point_id` })
-  public id: number;
+  // @PrimaryColumn({ name: `point_id` })
+  // public id: number;
 
-  @OneToOne(() => Point, (point) => point._deliveryPoint)
+  @OneToOne(() => Point, (point) => point._deliveryPoint, {
+    primary: true,
+  })
   @JoinColumn({ name: `point_id` })
   public point: Point;
 
