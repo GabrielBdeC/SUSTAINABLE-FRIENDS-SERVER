@@ -12,6 +12,15 @@ export class DeliveryPoint {
   @JoinColumn({ name: `point_id` })
   public point: Point;
 
-  @Column()
-  public description: string;
+  @Column({
+    name: 'description',
+    type: 'text',
+  })
+  protected _description: string;
+  public get description(): string {
+    return this._description;
+  }
+  public set description(description: string) {
+    this._description = description;
+  }
 }

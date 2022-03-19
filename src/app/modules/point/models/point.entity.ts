@@ -9,6 +9,7 @@ import {
 } from 'typeorm';
 import { Item } from '../../item/models/item.entity';
 import { User } from '../../user/models/user.entity';
+import { PointItem } from './ point-item.entity';
 import { CollectPoint } from './collect-point.entity';
 import { DeliveryPoint } from './delivery-point.entity';
 
@@ -44,6 +45,7 @@ export class Point extends Base {
     this._longitude = longitude;
   }
 
+  // user id relation
   @ManyToOne(() => User, (user) => user.point)
   @JoinColumn({ name: 'user_id' })
   public _user: User;
@@ -54,6 +56,7 @@ export class Point extends Base {
     this._user = user;
   }
 
+  // changed by relation
   @ManyToOne(() => User, (changedBy) => changedBy.point)
   @JoinColumn({ name: 'changed_by' })
   public _changedBy: User;
@@ -64,26 +67,42 @@ export class Point extends Base {
     this._changedBy = changedBy;
   }
 
+  // collectPoint
   @OneToOne(() => CollectPoint, (collectPoint) => collectPoint.point, {
     nullable: true,
     cascade: true,
   })
   public _collectPoint: CollectPoint;
+  public get collectPoint(): CollectPoint {
+    return this._collectPoint;
+  }
+  public set collectPoint(collectPoint: CollectPoint) {
+    this._collectPoint = collectPoint;
+  }
 
+  // delivery point
   @OneToOne(() => DeliveryPoint, (deliveryPoint) => deliveryPoint.point, {
     nullable: true,
     cascade: true,
   })
   public _deliveryPoint: DeliveryPoint;
-
-  @OneToMany(() => Item, (item) => item._point, {
-    cascade: true,
-  })
-  public _items: Item[];
-  get items(): Item[] {
-    return this._items;
+  public get deliveryPoint(): DeliveryPoint {
+    return this._deliveryPoint;
   }
-  set items(items: Item[]) {
-    this._items = items;
+  public set deliveryPoint(deliveryPoint: DeliveryPoint) {
+    this._deliveryPoint = deliveryPoint;
+  }
+
+  // pointItem relation
+  @OneToMany(() => PointItem, (pointItem) => pointItem._point, {
+    cascade: true,
+    nullable: true,
+  })
+  public _pointItems: PointItem[];
+  get pointItems(): PointItem[] {
+    return this._pointItems;
+  }
+  set pointItems(pointItems: PointItem[]) {
+    this._pointItems = pointItems;
   }
 }

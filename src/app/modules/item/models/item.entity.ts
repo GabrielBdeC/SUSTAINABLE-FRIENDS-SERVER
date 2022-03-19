@@ -1,11 +1,5 @@
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
-import { Point } from '../../point/models/point.entity';
+import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { PointItem } from '../../point/models/ point-item.entity';
 
 @Entity({
   name: 'Item',
@@ -34,13 +28,15 @@ export class Item {
     this._name = name;
   }
 
-  @ManyToOne(() => Point, (point) => point.items)
-  @JoinColumn({ name: 'point_id' })
-  public _point: Point;
-  get point(): Point {
-    return this._point;
+  @OneToOne(() => PointItem, (pointItem) => pointItem._item, {
+    cascade: true,
+    nullable: true,
+  })
+  protected _items: Item;
+  public get items(): Item {
+    return this._items;
   }
-  set point(point: Point) {
-    this._point = point;
+  public set items(items: Item) {
+    this._items = items;
   }
 }

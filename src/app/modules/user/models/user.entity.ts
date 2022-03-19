@@ -12,6 +12,7 @@ import { PersonalUser } from './personal-user.entity';
 import { CompanyUser } from './company-user.entity';
 import { IPreferences } from '../constants/preferences.constant';
 import { Point } from '../../point/models/point.entity';
+import { PointItem } from '../../point/models/ point-item.entity';
 
 @Entity({
   name: 'User',
@@ -102,6 +103,7 @@ export class User extends Base {
     this.personal = personal;
   }
 
+  // point user id
   @OneToMany(() => Point, (point) => point._user, {
     cascade: true,
     nullable: true,
@@ -114,6 +116,7 @@ export class User extends Base {
     this._point = point;
   }
 
+  // point changedBy
   @OneToMany(() => Point, (pointChangedBy) => pointChangedBy._changedBy, {
     cascade: true,
     nullable: true,
@@ -124,6 +127,23 @@ export class User extends Base {
   }
   set pointChangedBy(pointChangedBy: Point[]) {
     this._pointChangedBy = pointChangedBy;
+  }
+
+  // point item collectedBy
+  @OneToOne(
+    () => PointItem,
+    (pointItemCollectedBy) => pointItemCollectedBy._collectedBy,
+    {
+      cascade: true,
+      nullable: true,
+    },
+  )
+  public _pointItemCollectedBy: PointItem;
+  get pointItemCollectedBy(): PointItem {
+    return this._pointItemCollectedBy;
+  }
+  set pointItemCollectedBy(pointItemCollectedBy: PointItem) {
+    this._pointItemCollectedBy = pointItemCollectedBy;
   }
 
   public getEmail(): string {
