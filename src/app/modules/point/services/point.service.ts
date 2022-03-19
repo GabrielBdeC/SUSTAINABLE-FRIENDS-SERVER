@@ -12,6 +12,7 @@ import { PointItem } from '../models/ point-item.entity';
 import { PointItemDataConverter } from '../data-converters/point-item.data-converter';
 import { Item } from '../../item/models/item.entity';
 import { ErrorHandlerService } from 'src/app/shared/errors/error.service';
+import { PointDto } from '../dtos/point.dto';
 
 @Injectable()
 export class PointService {
@@ -65,5 +66,22 @@ export class PointService {
     const new_point = await this.pointRepository.save(point);
 
     return this.pointDataConverter.toDto(new_point);
+  }
+
+  public async getOne(identifier: string): Promise<PointDto> {
+    try {
+      const point = await this.pointRepository
+        .createQueryBuilder('point')
+        .leftJoinAndSelect('point._pointItems', '_pointItems')
+        .leftJoinAndSelect('point._deliveryPoint', '_deliveryPoint')
+        .leftJoinAndSelect('point._user', '_user')
+        .leftJoinAndSelect('point._changedBy', '_changedBy')
+        .where('point.identifier = :identifier', { identifier: identifier })
+        .getOneOrFail();
+
+      return this.pointDataConverter.toDto(point);
+    } catch (error) {
+      return error;
+    }
   }
 }

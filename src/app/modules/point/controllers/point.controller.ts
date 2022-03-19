@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  Param,
   Post,
   Request,
   UseGuards,
@@ -37,5 +38,11 @@ export class PointController {
     @Request() req,
   ): Promise<any> {
     return this.pointService.createPoint(body, req.user.identifier);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('/:id')
+  public async getOnePoint(@Param('id') pointId: string) {
+    return this.pointService.getOne(pointId);
   }
 }
