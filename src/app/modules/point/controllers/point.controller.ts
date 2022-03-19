@@ -4,6 +4,7 @@ import {
   Get,
   Param,
   Post,
+  Put,
   Request,
   UseGuards,
 } from '@nestjs/common';
@@ -44,5 +45,11 @@ export class PointController {
   @Get('/:id')
   public async getOnePoint(@Param('id') pointId: string) {
     return this.pointService.getOne(pointId);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Put('/:id')
+  public async updatePoint(@Param('id') pointId: string) {
+    // return this.pointService.updateOnePoint(pointId);
   }
 }

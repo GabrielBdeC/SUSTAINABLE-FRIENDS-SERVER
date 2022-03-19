@@ -6,7 +6,6 @@ import { ErrorHandlerService } from 'src/app/shared/errors/error.service';
 import { UserDto } from '../dtos/user.dto';
 import { UserDataConverter } from '../data-converters/user.data-converter';
 import { IPreferences } from '../constants/preferences.constant';
-import { HttpException } from '@nestjs/common';
 
 export class UserService {
   constructor(

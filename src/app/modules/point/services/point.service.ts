@@ -84,4 +84,6 @@ export class PointService {
       return error;
     }
   }
+
+  // public async updateOneUser(identifier: string) {}
 }

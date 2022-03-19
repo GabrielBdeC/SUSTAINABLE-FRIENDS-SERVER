@@ -46,7 +46,6 @@ export class AuthService {
       access_token: await this.jwtService.signAsync(payload),
       name: userDto.name,
       identifier: userDto.identifier,
-      isPersonal: userDto.isPersonal,
     };
   }
 }
