@@ -13,6 +13,7 @@ import { PointItemDataConverter } from '../data-converters/point-item.data-conve
 import { Item } from '../../item/models/item.entity';
 import { ErrorHandlerService } from 'src/app/shared/errors/error.service';
 import { PointDto } from '../dtos/point.dto';
+import { PointItemService } from './point-item.service';
 
 @Injectable()
 export class PointService {
@@ -22,6 +23,7 @@ export class PointService {
     private pointDataConverter: PointDataConverter,
     private pointItemDataConverter: PointItemDataConverter,
     private userService: UserService,
+    private pointItemService: PointItemService,
     private itemService: ItemService,
     private errorHandlerService: ErrorHandlerService,
   ) {}
@@ -42,16 +44,11 @@ export class PointService {
 
     point.user = user;
 
-    const pointItems: PointItem[] = [];
-    for (const item of items) {
-      const pointItem: PointItem = this.pointItemDataConverter.toEntity(
-        item,
-        point,
-        user,
-      );
-      pointItems.push(pointItem);
-    }
-    point.pointItems = pointItems;
+    point.pointItems = await this.pointItemService.getPointItems(
+      items,
+      user,
+      point,
+    );
 
     if (user.getCompany()) {
       const deliveryPoint: DeliveryPoint = new DeliveryPoint();
@@ -68,13 +65,15 @@ export class PointService {
     return this.pointDataConverter.toDto(new_point);
   }
 
-  public async getOne(identifier: string): Promise<PointDto> {
+  public async getOne(identifier: string): Promise<PointDto | any> {
     try {
       const point = await this.pointRepository
         .createQueryBuilder('point')
         .leftJoinAndSelect('point._pointItems', '_pointItems')
+        .leftJoinAndSelect('_pointItems._item', '_item')
         .leftJoinAndSelect('point._deliveryPoint', '_deliveryPoint')
         .leftJoinAndSelect('point._user', '_user')
+        .leftJoinAndSelect('_user.company', 'company')
         .leftJoinAndSelect('point._changedBy', '_changedBy')
         .where('point.identifier = :identifier', { identifier: identifier })
         .getOneOrFail();
@@ -85,5 +84,63 @@ export class PointService {
     }
   }
 
-  // public async updateOneUser(identifier: string) {}
+  public async updatePoint(
+    pointIdentifier: string,
+    pointDto: CreatePointDto,
+    userIdentifier: string,
+  ) {
+    try {
+      const user: User = await this.userService.findOne(userIdentifier);
+      // TODO: handle exceptions
+      // const point: Point = this.pointDataConverter.toEntity(pointDto);
+
+      const updated_point = await this.pointRepository
+        .createQueryBuilder('point')
+        .leftJoinAndSelect('point._pointItems', '_pointItems')
+        .leftJoinAndSelect('_pointItems._item', '_item')
+        .leftJoinAndSelect('point._deliveryPoint', '_deliveryPoint')
+        .leftJoinAndSelect('point._user', '_user')
+        .leftJoinAndSelect('_user.company', 'company')
+        .leftJoinAndSelect('point._changedBy', '_changedBy')
+        // .update(Point)
+        // .set({
+        //   latitude: pointDto.latitude,
+        //   longitude: pointDto.longitude,
+        //   pointItems: pointItems,
+        //   deliveryPoint: { description: pointDto.description },
+        // })
+        .where('point.identifier = :identifier', {
+          identifier: pointIdentifier,
+        })
+        .getOneOrFail();
+
+      this.pointItemService.deletePointItems(updated_point.pointItems);
+
+      if (pointDto.items) {
+        const items: Item[] = await this.itemService.getItemsFromIds(
+          pointDto.items,
+        );
+        updated_point.pointItems = await this.pointItemService.getPointItems(
+          items,
+          user,
+          updated_point,
+        );
+      }
+
+      updated_point.changedBy = user;
+
+      if (user.getCompany()) {
+        const deliveryPoint: DeliveryPoint = new DeliveryPoint();
+        deliveryPoint.description = pointDto.description;
+        updated_point.deliveryPoint = deliveryPoint;
+      }
+
+      const new_point = await this.pointRepository.save(updated_point);
+
+      return this.pointDataConverter.toDto(new_point);
+      // return updated_point;
+    } catch (error) {
+      return error;
+    }
+  }
 }

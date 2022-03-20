@@ -14,11 +14,13 @@ export class UserDataConverter {
     response.name = entity.getName();
     response.preferences = entity.preferences;
 
-    if (entity.getCompany() === null) {
-      response.isPersonal = true;
-    } else {
-      response.isPersonal = false;
-    }
+    return response;
+  }
+
+  public toDtoWithoutPreferences(entity: User): UserDto {
+    const response: UserDto = {} as UserDto;
+    response.identifier = entity.identifier;
+    response.name = entity.getName();
 
     return response;
   }

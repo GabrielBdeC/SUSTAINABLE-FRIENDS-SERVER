@@ -4,5 +4,5 @@ import { UserDto } from '../../user/dtos/user.dto';
 
 export interface PointItemDto extends BaseDto {
   item: ItemDto;
-  collectedBy: UserDto;
+  collectedBy?: UserDto;
 }

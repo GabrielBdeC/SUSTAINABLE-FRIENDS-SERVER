@@ -49,7 +49,11 @@ export class PointController {
 
   @UseGuards(JwtAuthGuard)
   @Put('/:id')
-  public async updatePoint(@Param('id') pointId: string) {
-    // return this.pointService.updateOnePoint(pointId);
+  public async updatePoint(
+    @Param('id') pointId: string,
+    @Body() body: CreatePointDto,
+    @Request() req,
+  ) {
+    return this.pointService.updatePoint(pointId, body, req.user.identifier);
   }
 }

@@ -28,10 +28,7 @@ export class Item {
     this._name = name;
   }
 
-  @OneToOne(() => PointItem, (pointItem) => pointItem._item, {
-    cascade: true,
-    nullable: true,
-  })
+  @OneToOne(() => PointItem, (pointItem) => pointItem._item)
   protected _items: Item;
   public get items(): Item {
     return this._items;

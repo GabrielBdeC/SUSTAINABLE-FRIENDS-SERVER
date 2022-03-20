@@ -49,7 +49,9 @@ export class PointItem extends Base {
     this._point = point;
   }
 
-  @OneToOne(() => Item, (item) => item.items)
+  @OneToOne(() => Item, (item) => item.items, {
+    cascade: true,
+  })
   @JoinColumn({ name: 'item_id' })
   public _item: Item;
   get item(): Item {
