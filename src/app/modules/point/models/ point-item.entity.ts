@@ -28,19 +28,6 @@ export class PointItem extends Base {
     this._id = id;
   }
 
-  @DeleteDateColumn({
-    name: 'collected_time',
-    type: 'timestamp',
-    nullable: true,
-  })
-  protected _collectedTime: Date;
-  public get collectedTime(): Date {
-    return this._collectedTime;
-  }
-  public set collectedTime(collectedTime: Date) {
-    this._collectedTime = collectedTime;
-  }
-
   @ManyToOne(() => Point, (point) => point.pointItems)
   @JoinColumn({ name: 'point_id' })
   public _point: Point;

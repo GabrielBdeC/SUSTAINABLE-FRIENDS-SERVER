@@ -1,12 +1,9 @@
 import { CreatePointDto } from '../dtos/create-point.dto';
 import { Point } from '../models/point.entity';
 import { v4 as uuidv4 } from 'uuid';
-import { DeliveryPoint } from '../models/delivery-point.entity';
 import { PointDto } from '../dtos/point.dto';
 import { UserDataConverter } from '../../user/data-converters/user.data-converter';
 import { PointItemDataConverter } from './point-item.data-converter';
-import { Item } from '../../item/models/item.entity';
-import { PointItem } from '../models/ point-item.entity';
 import { PointItemDto } from '../dtos/point-item.dto';
 
 export class PointDataConverter {

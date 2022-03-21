@@ -136,7 +136,13 @@ export class PointService {
     }
   }
 
-  public async deletePointItem(pointItemIdentifier: string) {
-    return this.pointItemService.softDeletePointItem(pointItemIdentifier);
+  public async deletePointItem(
+    pointItemIdentifier: string,
+    userIdentifier: string,
+  ) {
+    return this.pointItemService.softDeletePointItem(
+      pointItemIdentifier,
+      userIdentifier,
+    );
   }
 }

@@ -12,7 +12,6 @@ import {
 import { JwtAuthGuard } from 'src/app/shared/auth/guards/jwt-auth.guard';
 import { PointDataConverter } from '../data-converters/point.data-converter';
 import { CreatePointDto } from '../dtos/create-point.dto';
-// import { PointDto } from '../dtos/point.dto';
 import { Point } from '../models/point.entity';
 import { PointService } from '../services/point.service';
 
@@ -62,7 +61,11 @@ export class PointController {
   @Delete('/:pointId/pointItem/:pointItemId')
   public async deletePointItem(
     @Param('pointItemId') pointItemIdentifier: string,
+    @Request() req,
   ) {
-    return this.pointService.deletePointItem(pointItemIdentifier);
+    return this.pointService.deletePointItem(
+      pointItemIdentifier,
+      req.user.identifier,
+    );
   }
 }

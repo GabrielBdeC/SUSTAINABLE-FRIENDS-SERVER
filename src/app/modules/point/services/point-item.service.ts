@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Item } from '../../item/models/item.entity';
 import { User } from '../../user/models/user.entity';
+import { UserService } from '../../user/services/user.service';
 import { PointItemDataConverter } from '../data-converters/point-item.data-converter';
 import { PointItem } from '../models/ point-item.entity';
 import { Point } from '../models/point.entity';
@@ -13,6 +14,7 @@ export class PointItemService {
     private pointItemDataConverter: PointItemDataConverter,
     @InjectRepository(PointItem)
     private pointItemRepository: Repository<PointItem>,
+    private userService: UserService,
   ) {}
 
   public async getPointItems(
@@ -39,16 +41,27 @@ export class PointItemService {
     }
   }
 
-  public async softDeletePointItem(pointItemIdentifier: string) {
-    const pointItem = await this.pointItemRepository
-      .createQueryBuilder('pointItem')
-      .where('pointItem.identifier = :identifier', {
-        identifier: pointItemIdentifier,
-      })
-      .getOneOrFail();
+  public async softDeletePointItem(
+    pointItemIdentifier: string,
+    userIdentifier: string,
+  ) {
+    try {
+      const pointItem = await this.pointItemRepository
+        .createQueryBuilder('pointItem')
+        .where('pointItem.identifier = :identifier', {
+          identifier: pointItemIdentifier,
+        })
+        .getOneOrFail();
 
-    await this.pointItemRepository.softDelete(pointItem.id);
+      const user = await this.userService.findOne(userIdentifier);
 
-    return 'pointItem deleted';
+      await this.pointItemRepository.softDelete(pointItem.id);
+      pointItem.collectedBy = user;
+      await this.pointItemRepository.save(pointItem);
+
+      return 'pointItem deleted';
+    } catch (error) {
+      return error;
+    }
   }
 }

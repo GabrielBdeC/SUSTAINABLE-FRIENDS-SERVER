@@ -7,10 +7,7 @@ import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy, 'local') {
-  constructor(
-    private authService: AuthService,
-    private jwtService: JwtService,
-  ) {
+  constructor(private authService: AuthService) {
     super({
       usernameField: 'email',
     });
