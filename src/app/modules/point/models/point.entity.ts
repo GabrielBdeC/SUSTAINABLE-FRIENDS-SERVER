@@ -55,7 +55,7 @@ export class Point extends Base {
   }
 
   // changed by relation
-  @ManyToOne(() => User, (changedBy) => changedBy.point)
+  @ManyToOne(() => User, (user) => user.pointChangedBy)
   @JoinColumn({ name: 'changed_by' })
   public _changedBy: User;
   get changedBy(): User {
@@ -63,6 +63,16 @@ export class Point extends Base {
   }
   set changedBy(changedBy: User) {
     this._changedBy = changedBy;
+  }
+
+  @OneToOne(() => User, (user) => user.pointDeletedBy)
+  @JoinColumn({ name: 'deleted_by' })
+  public _deletedBy: User;
+  get deletedBy(): User {
+    return this._deletedBy;
+  }
+  set deletedBy(deletedBy: User) {
+    this._deletedBy = deletedBy;
   }
 
   // delivery point

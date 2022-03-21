@@ -129,6 +129,18 @@ export class User extends Base {
     this._pointChangedBy = pointChangedBy;
   }
 
+  @OneToOne(() => Point, (pointDeletedBy) => pointDeletedBy._deletedBy, {
+    cascade: true,
+    nullable: true,
+  })
+  public _pointDeletedBy: Point;
+  get pointDeletedBy(): Point {
+    return this._pointDeletedBy;
+  }
+  set pointDeletedBy(pointDeletedBy: Point) {
+    this._pointDeletedBy = pointDeletedBy;
+  }
+
   // point item collectedBy
   @OneToOne(
     () => PointItem,

@@ -54,10 +54,10 @@ export class PointItemService {
         .getOneOrFail();
 
       const user = await this.userService.findOne(userIdentifier);
-
-      await this.pointItemRepository.softDelete(pointItem.id);
       pointItem.collectedBy = user;
       await this.pointItemRepository.save(pointItem);
+
+      await this.pointItemRepository.softDelete(pointItem.id);
 
       return 'pointItem deleted';
     } catch (error) {

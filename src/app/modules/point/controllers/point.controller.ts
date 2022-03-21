@@ -6,6 +6,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
   Request,
   UseGuards,
 } from '@nestjs/common';
@@ -22,14 +23,23 @@ export class PointController {
     private pointDataConverter: PointDataConverter,
   ) {}
 
+  // @Get()
+  // public async getAll(): Promise<Point[]> {
+  //   return this.pointService.getAll();
+  //   /* return this.pointService.getAll().then((listPoint: Point[]) => {
+  //     return listPoint.map((point: Point) => {
+  //       return this.pointDataConverter.toDto(point);
+  //     });
+  //   }); */
+  // }
+
   @Get()
-  public async getAll(): Promise<Point[]> {
-    return this.pointService.getAll();
-    /* return this.pointService.getAll().then((listPoint: Point[]) => {
-      return listPoint.map((point: Point) => {
-        return this.pointDataConverter.toDto(point);
-      });
-    }); */
+  public async getAllByLatLong(
+    @Query('lat') latitude: number,
+    @Query('long') longitude: number,
+    @Body() body,
+  ) {
+    return this.pointService.getAllByLatLong(latitude, longitude, body);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -44,7 +54,8 @@ export class PointController {
   @UseGuards(JwtAuthGuard)
   @Get('/:id')
   public async getOnePoint(@Param('id') pointId: string) {
-    return this.pointService.getOne(pointId);
+    const point = await this.pointService.getOne(pointId);
+    return this.pointDataConverter.toDto(point);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -55,6 +66,15 @@ export class PointController {
     @Request() req,
   ) {
     return this.pointService.updatePoint(pointId, body, req.user.identifier);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete('/:pointId')
+  public async deletePoint(
+    @Param('pointId') pointIdentifier: string,
+    @Request() req,
+  ) {
+    return this.pointService.deletePoint(pointIdentifier, req.user.identifier);
   }
 
   @UseGuards(JwtAuthGuard)
