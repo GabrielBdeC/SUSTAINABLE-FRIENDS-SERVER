@@ -38,4 +38,17 @@ export class PointItemService {
       await this.pointItemRepository.delete(pointItem.id);
     }
   }
+
+  public async softDeletePointItem(pointItemIdentifier: string) {
+    const pointItem = await this.pointItemRepository
+      .createQueryBuilder('pointItem')
+      .where('pointItem.identifier = :identifier', {
+        identifier: pointItemIdentifier,
+      })
+      .getOneOrFail();
+
+    await this.pointItemRepository.softDelete(pointItem.id);
+
+    return 'pointItem deleted';
+  }
 }

@@ -44,7 +44,6 @@ Table Point_Item {
   point_id BIGINT [not null, ref: > Point.id]
   item_id BIGINT [not null, ref: > Item.id]
   collected_by BIGINT [ref: > User.id]
-  collected_time TIMESTAMP
   id BIGINT [pk, increment]
   identifier VARCHAR(32) [not null, note: 'used in DTO']
   create_time TIMESTAMP [not null, default: `CURRENT_TIMESTAMP()`]

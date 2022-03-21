@@ -53,7 +53,6 @@ CREATE TABLE `Point_Item` (
   `point_id` BIGINT NOT NULL,
   `item_id` BIGINT NOT NULL,
   `collected_by` BIGINT,
-  `collected_time` TIMESTAMP,
   `id` BIGINT PRIMARY KEY AUTO_INCREMENT,
   `identifier` VARCHAR(32) UNIQUE NOT NULL COMMENT 'used in DTO',
   `create_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),

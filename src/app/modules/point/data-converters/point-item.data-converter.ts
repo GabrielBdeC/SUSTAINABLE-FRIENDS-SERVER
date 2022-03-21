@@ -20,6 +20,7 @@ export class PointItemDataConverter {
   public toDto(pointItem: PointItem) {
     const dto = {} as PointItemDto;
     dto.item = pointItem.item;
+    dto.identifier = pointItem.identifier;
 
     return dto;
   }

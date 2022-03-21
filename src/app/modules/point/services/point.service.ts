@@ -8,7 +8,6 @@ import { PointDataConverter } from '../data-converters/point.data-converter';
 import { User } from '../../user/models/user.entity';
 import { ItemService } from '../../item/services/item.service';
 import { DeliveryPoint } from '../models/delivery-point.entity';
-import { PointItem } from '../models/ point-item.entity';
 import { PointItemDataConverter } from '../data-converters/point-item.data-converter';
 import { Item } from '../../item/models/item.entity';
 import { ErrorHandlerService } from 'src/app/shared/errors/error.service';
@@ -102,13 +101,6 @@ export class PointService {
         .leftJoinAndSelect('point._user', '_user')
         .leftJoinAndSelect('_user.company', 'company')
         .leftJoinAndSelect('point._changedBy', '_changedBy')
-        // .update(Point)
-        // .set({
-        //   latitude: pointDto.latitude,
-        //   longitude: pointDto.longitude,
-        //   pointItems: pointItems,
-        //   deliveryPoint: { description: pointDto.description },
-        // })
         .where('point.identifier = :identifier', {
           identifier: pointIdentifier,
         })
@@ -142,5 +134,9 @@ export class PointService {
     } catch (error) {
       return error;
     }
+  }
+
+  public async deletePointItem(pointItemIdentifier: string) {
+    return this.pointItemService.softDeletePointItem(pointItemIdentifier);
   }
 }

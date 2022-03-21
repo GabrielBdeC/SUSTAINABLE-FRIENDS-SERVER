@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Post,
@@ -55,5 +56,13 @@ export class PointController {
     @Request() req,
   ) {
     return this.pointService.updatePoint(pointId, body, req.user.identifier);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete('/:pointId/pointItem/:pointItemId')
+  public async deletePointItem(
+    @Param('pointItemId') pointItemIdentifier: string,
+  ) {
+    return this.pointService.deletePointItem(pointItemIdentifier);
   }
 }

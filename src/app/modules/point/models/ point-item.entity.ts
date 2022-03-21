@@ -1,6 +1,7 @@
 import { Base } from 'src/app/shared/models/base.entity';
 import {
   Column,
+  DeleteDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
@@ -27,9 +28,10 @@ export class PointItem extends Base {
     this._id = id;
   }
 
-  @Column({
+  @DeleteDateColumn({
     name: 'collected_time',
     type: 'timestamp',
+    nullable: true,
   })
   protected _collectedTime: Date;
   public get collectedTime(): Date {
