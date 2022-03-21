@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { CompanyUser } from '../models/company-user.entity';
 import { PersonalUser } from '../models/personal-user.entity';
 import { IPreferences } from '../constants/preferences.constant';
+import { HttpException, HttpStatus } from '@nestjs/common';
 
 export class UserDataConverter {
   public toDto(entity: User): UserDto {
@@ -12,12 +13,19 @@ export class UserDataConverter {
     response.identifier = entity.identifier;
     response.name = entity.getName();
     response.preferences = entity.preferences;
+
+    return response;
+  }
+
+  public toDtoWithoutPreferences(entity: User): UserDto {
+    const response: UserDto = {} as UserDto;
+    response.identifier = entity.identifier;
+    response.name = entity.getName();
+
     return response;
   }
 
   public async toEntity(dto: UserDto): Promise<User> {
-    // need to put :User Dto, but it doesn't work
-
     const user = new User();
     user.setName(dto.name);
     // user.setName(dto.getName())
@@ -30,24 +38,20 @@ export class UserDataConverter {
       user.setPassword(dto.password);
     }
 
-    const identifier = uuidv4().replace(/-/g, '').toUpperCase(); // colocar no data converter
+    const identifier = uuidv4().replace(/-/g, '').toUpperCase();
     user.identifier = identifier;
 
-    // const _preferences: IPreferences = {} as IPreferences;
-
-    // if (dto.preferences.items) {
-    //   const items = dto.preferences.items.filter((item) => {
-    //     if (item.active) {
-    //       const subItems = item.subItems.filter((subItem) => {
-    //         if (subItem.active) return subItem;
-    //       });
-    //       item.subItems = subItems;
-    //       return item;
-    //     }
-    //   });
-
-    //   _preferences.items = items;
-    // }
+    if (!dto.cnpj && !dto.cpf) {
+      throw new HttpException(
+        {
+          status: HttpStatus.BAD_REQUEST,
+          error: {
+            message: 'The user must have either a CPF or CNPJ',
+          },
+        },
+        HttpStatus.BAD_REQUEST,
+      );
+    }
 
     user.preferences = await this.handlePreferences(dto.preferences);
 
@@ -59,6 +63,18 @@ export class UserDataConverter {
       const company = new CompanyUser();
       company.cnpj = dto.cnpj;
       user.setCompany(company);
+      // if (dto.preferences) {
+      //   throw new HttpException(
+      //     {
+      //       status: HttpStatus.BAD_REQUEST,
+      //       error: {
+      //         message:
+      //           'The user which has a CNPJ cannot have preferences property',
+      //       },
+      //     },
+      //     HttpStatus.BAD_REQUEST,
+      //   );
+      // }
     }
 
     return user;

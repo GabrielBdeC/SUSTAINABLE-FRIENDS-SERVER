@@ -2,7 +2,6 @@ import {
   Body,
   Controller,
   Get,
-  Param,
   Post,
   Request,
   UseGuards,
@@ -36,8 +35,8 @@ export class UserController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get(':id')
+  @Get('single')
   async getSingleUser(@Request() req) {
-    return req.user;
+    return await this.userService.getSingleUser(req.user.identifier);
   }
 }

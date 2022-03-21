@@ -24,6 +24,8 @@ export class AuthService {
     try {
       const user = await this.userRepository
         .createQueryBuilder('user')
+        .leftJoinAndSelect('user.personal', 'personal')
+        .leftJoinAndSelect('user.company', 'company')
         .where('user.email = :email', { email: email })
         .getOneOrFail();
 

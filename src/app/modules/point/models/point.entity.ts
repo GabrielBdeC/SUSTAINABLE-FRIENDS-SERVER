@@ -1,7 +1,15 @@
 import { Base } from 'src/app/shared/models/base.entity';
-import { Column, Entity, JoinColumn, ManyToOne, OneToOne } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  OneToOne,
+} from 'typeorm';
 import { User } from '../../user/models/user.entity';
-import { CollectPoint } from './collect-point.entity';
+import { PointItem } from './ point-item.entity';
+import { DeliveryPoint } from './delivery-point.entity';
 
 @Entity({
   name: 'Point',
@@ -35,6 +43,7 @@ export class Point extends Base {
     this._longitude = longitude;
   }
 
+  // user id relation
   @ManyToOne(() => User, (user) => user.point)
   @JoinColumn({ name: 'user_id' })
   public _user: User;
@@ -45,6 +54,7 @@ export class Point extends Base {
     this._user = user;
   }
 
+  // changed by relation
   @ManyToOne(() => User, (changedBy) => changedBy.point)
   @JoinColumn({ name: 'changed_by' })
   public _changedBy: User;
@@ -55,9 +65,29 @@ export class Point extends Base {
     this._changedBy = changedBy;
   }
 
-  @OneToOne(() => CollectPoint, (collectPoint) => collectPoint.point, {
+  // delivery point
+  @OneToOne(() => DeliveryPoint, (deliveryPoint) => deliveryPoint.point, {
     nullable: true,
     cascade: true,
   })
-  public _collectPoint: CollectPoint;
+  public _deliveryPoint: DeliveryPoint;
+  public get deliveryPoint(): DeliveryPoint {
+    return this._deliveryPoint;
+  }
+  public set deliveryPoint(deliveryPoint: DeliveryPoint) {
+    this._deliveryPoint = deliveryPoint;
+  }
+
+  // pointItem relation
+  @OneToMany(() => PointItem, (pointItem) => pointItem._point, {
+    cascade: true,
+    nullable: true,
+  })
+  public _pointItems: PointItem[];
+  get pointItems(): PointItem[] {
+    return this._pointItems;
+  }
+  set pointItems(pointItems: PointItem[]) {
+    this._pointItems = pointItems;
+  }
 }

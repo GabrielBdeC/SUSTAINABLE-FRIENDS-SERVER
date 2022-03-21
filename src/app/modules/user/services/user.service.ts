@@ -37,15 +37,17 @@ export class UserService {
     }
   }
 
-  public async findOne(identifier: string): Promise<any> {
+  public async findOne(identifier: string): Promise<User | any> {
     try {
       const user = await this.userRepository
         .createQueryBuilder('user')
+        .leftJoinAndSelect('user.personal', 'personal')
+        .leftJoinAndSelect('user.company', 'company')
         .where('user.identifier = :identifier', { identifier: identifier })
         .getOneOrFail();
       return user;
     } catch (error) {
-      return await this.errorHandlerService.UserNotFoundError(error, {
+      await this.errorHandlerService.UserNotFoundError(error, {
         identifier: identifier,
       });
     }
@@ -60,13 +62,6 @@ export class UserService {
     identifier: string,
     preferences: IPreferences,
   ): Promise<any> {
-    // const user = await this.userRepository
-    //   .createQueryBuilder()
-    //   .update(User)
-    //   .set({ preferences: preferences })
-    //   .where('identifier = :identifier', { identifier: identifier })
-    //   .execute();
-
     const user = await this.userRepository
       .createQueryBuilder('user')
       .where('user.identifier = :identifier', { identifier: identifier })
@@ -79,12 +74,11 @@ export class UserService {
     await this.userRepository.save(user);
 
     return this.userDataConverter.toDto(user);
+  }
 
-    // const user = await this.userRepository.update(
-    //   { identifier: identifier },
-    //   { setPreferences(preferences); },
-    // );
-
-    return user;
+  public async getSingleUser(identifier: string) {
+    const user = await this.findOne(identifier);
+    const user_dto = this.userDataConverter.toDto(user);
+    return user_dto;
   }
 }

@@ -2,16 +2,12 @@ import { Strategy } from 'passport-local';
 import { PassportStrategy } from '@nestjs/passport';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { AuthService } from '../auth.service';
-import { User } from 'src/app/modules/user/models/user.entity';
 import { UserDto } from 'src/app/modules/user/dtos/user.dto';
 import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy, 'local') {
-  constructor(
-    private authService: AuthService,
-    private jwtService: JwtService,
-  ) {
+  constructor(private authService: AuthService) {
     super({
       usernameField: 'email',
     });
@@ -22,8 +18,6 @@ export class LocalStrategy extends PassportStrategy(Strategy, 'local') {
     if (!user) {
       throw new NotFoundException();
     }
-    // const payload = { name: user.name, identifier: user.identifier };
-    // user.jwt = this.jwtService.sign(payload);
     return user;
   }
 }

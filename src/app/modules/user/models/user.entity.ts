@@ -12,6 +12,7 @@ import { PersonalUser } from './personal-user.entity';
 import { CompanyUser } from './company-user.entity';
 import { IPreferences } from '../constants/preferences.constant';
 import { Point } from '../../point/models/point.entity';
+import { PointItem } from '../../point/models/ point-item.entity';
 
 @Entity({
   name: 'User',
@@ -81,14 +82,32 @@ export class User extends Base {
     cascade: true,
   })
   public company: CompanyUser;
+  public getCompany(): CompanyUser {
+    return this.company;
+  }
+
+  public setCompany(company: CompanyUser): void {
+    this.company = company;
+  }
 
   @OneToOne(() => PersonalUser, (personal) => personal.user, {
     nullable: true,
     cascade: true,
   })
   public personal: PersonalUser;
+  public getPersonal(): PersonalUser {
+    return this.personal;
+  }
 
-  @OneToMany(() => Point, (point) => point._user)
+  public setPersonal(personal: PersonalUser): void {
+    this.personal = personal;
+  }
+
+  // point user id
+  @OneToMany(() => Point, (point) => point._user, {
+    cascade: true,
+    nullable: true,
+  })
   public _point: Point[];
   get point(): Point[] {
     return this._point;
@@ -97,13 +116,34 @@ export class User extends Base {
     this._point = point;
   }
 
-  @OneToMany(() => Point, (pointChangedBy) => pointChangedBy._changedBy)
+  // point changedBy
+  @OneToMany(() => Point, (pointChangedBy) => pointChangedBy._changedBy, {
+    cascade: true,
+    nullable: true,
+  })
   public _pointChangedBy: Point[];
   get pointChangedBy(): Point[] {
     return this._pointChangedBy;
   }
   set pointChangedBy(pointChangedBy: Point[]) {
     this._pointChangedBy = pointChangedBy;
+  }
+
+  // point item collectedBy
+  @OneToOne(
+    () => PointItem,
+    (pointItemCollectedBy) => pointItemCollectedBy._collectedBy,
+    {
+      cascade: true,
+      nullable: true,
+    },
+  )
+  public _pointItemCollectedBy: PointItem;
+  get pointItemCollectedBy(): PointItem {
+    return this._pointItemCollectedBy;
+  }
+  set pointItemCollectedBy(pointItemCollectedBy: PointItem) {
+    this._pointItemCollectedBy = pointItemCollectedBy;
   }
 
   public getEmail(): string {
@@ -128,21 +168,5 @@ export class User extends Base {
 
   public setPassword(password: string) {
     this.password = password;
-  }
-
-  public getCompany(): string {
-    return this.company.cnpj;
-  }
-
-  public setCompany(company: CompanyUser): void {
-    this.company = company;
-  }
-
-  /*public getPersonal(): string {
-    return this.personal();
-  }*/
-
-  public setPersonal(personal: PersonalUser): void {
-    this.personal = personal;
   }
 }

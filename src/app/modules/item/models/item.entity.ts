@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { PointItem } from '../../point/models/ point-item.entity';
 
 @Entity({
   name: 'Item',
@@ -25,5 +26,14 @@ export class Item {
   }
   set name(name: string) {
     this._name = name;
+  }
+
+  @OneToOne(() => PointItem, (pointItem) => pointItem._item)
+  protected _items: Item;
+  public get items(): Item {
+    return this._items;
+  }
+  public set items(items: Item) {
+    this._items = items;
   }
 }

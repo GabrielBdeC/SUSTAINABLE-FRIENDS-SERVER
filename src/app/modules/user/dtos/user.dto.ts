@@ -8,4 +8,5 @@ export interface UserDto extends BaseDto {
   preferences: IPreferences | undefined;
   cnpj: string | undefined;
   cpf: string | undefined;
+  isPersonal?: boolean;
 }

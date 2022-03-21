@@ -22,10 +22,15 @@ export class UserAuthController {
   ) {}
 
   @Post('signup')
-  async signUp(@Body() body: UserDto) {
+  async signUp(@Body() body: UserDto, @Request() req) {
     const new_user_entity = await this.userDataConverter.toEntity(body);
     const new_user = await this.userService.create(new_user_entity);
     const userDto = this.userDataConverter.toDto(new_user);
+
+    // req.user = {
+    //   name: userDto.name,
+    //   identifier: userDto.identifier,
+    // };
 
     return this.authService.issueJWT(userDto);
   }
@@ -38,7 +43,8 @@ export class UserAuthController {
 
   @UseGuards(JwtAuthGuard)
   @Get('user/protected')
-  async protectedRouteTest() {
+  async protectedRouteTest(@Request() req) {
+    console.log(req.user);
     return 'This is the protected route. You can only access it with the JWT token.';
   }
 }

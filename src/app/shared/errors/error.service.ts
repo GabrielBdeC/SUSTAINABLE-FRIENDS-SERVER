@@ -35,7 +35,7 @@ export class ErrorHandlerService {
           status: HttpStatus.NOT_FOUND,
           error: {
             error: 'Not Found',
-            message: `Could not find user with email \'${parameters.email}\'`,
+            message: `Could not find user with email \'${parameters.email}\'.`,
           },
         },
         HttpStatus.NOT_FOUND,
@@ -46,11 +46,33 @@ export class ErrorHandlerService {
           status: HttpStatus.NOT_FOUND,
           error: {
             error: 'Not Found',
-            message: `Could not find user with identifier \'${parameters.identifier}\'`,
+            message: `Could not find user with identifier \'${parameters.identifier}\'.`,
           },
         },
         HttpStatus.NOT_FOUND,
       );
     }
+  }
+
+  public async ItemNonExistent(items, itemsLength) {
+    throw new HttpException(
+      {
+        error: {
+          message: `Items with the id of ${items} are not on the database. Please, provide an appropriate numbers between 0 and ${itemsLength}.`,
+        },
+      },
+      HttpStatus.BAD_REQUEST,
+    );
+  }
+
+  public async InappropriateUser() {
+    throw new HttpException(
+      {
+        error: {
+          message: `Users which aren't from companies are forbidden of creating a delivery point.`,
+        },
+      },
+      HttpStatus.FORBIDDEN,
+    );
   }
 }
