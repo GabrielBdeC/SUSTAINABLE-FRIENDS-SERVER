@@ -1,8 +1,8 @@
 import { PointDto } from './point.dto';
 
 export interface PagedDto {
-  totalPoints: number;
+  totalPoints?: number;
   pageSize: number;
   pageIndex: number;
-  points: PointDto[];
+  points?: PointDto[];
 }

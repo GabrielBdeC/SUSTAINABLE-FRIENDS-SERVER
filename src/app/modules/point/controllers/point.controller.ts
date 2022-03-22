@@ -13,7 +13,7 @@ import {
 import { JwtAuthGuard } from 'src/app/shared/auth/guards/jwt-auth.guard';
 import { PointDataConverter } from '../data-converters/point.data-converter';
 import { CreatePointDto } from '../dtos/create-point.dto';
-import { Point } from '../models/point.entity';
+import { PagedDto } from '../dtos/points-paged.dto';
 import { PointService } from '../services/point.service';
 
 @Controller('point')
@@ -33,11 +33,12 @@ export class PointController {
   //   }); */
   // }
 
+  // @UseGuards(JwtAuthGuard)
   @Get()
   public async getAllByLatLong(
     @Query('lat') latitude: number,
     @Query('long') longitude: number,
-    @Body() body,
+    @Body() body: PagedDto,
   ) {
     return this.pointService.getAllByLatLong(latitude, longitude, body);
   }

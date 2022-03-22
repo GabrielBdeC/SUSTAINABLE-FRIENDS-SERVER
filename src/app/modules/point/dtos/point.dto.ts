@@ -3,6 +3,7 @@ import { UserDto } from '../../user/dtos/user.dto';
 import { PointItemDto } from './point-item.dto';
 
 export interface PointDto extends BaseDto {
+  distance?: number;
   latitude: number;
   longitude: number;
   description?: string;

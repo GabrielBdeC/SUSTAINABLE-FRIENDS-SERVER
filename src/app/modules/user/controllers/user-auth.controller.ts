@@ -27,11 +27,6 @@ export class UserAuthController {
     const new_user = await this.userService.create(new_user_entity);
     const userDto = this.userDataConverter.toDto(new_user);
 
-    // req.user = {
-    //   name: userDto.name,
-    //   identifier: userDto.identifier,
-    // };
-
     return this.authService.issueJWT(userDto);
   }
 

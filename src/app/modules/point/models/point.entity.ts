@@ -1,3 +1,4 @@
+import { IsLatitude, IsNotEmpty } from 'class-validator';
 import { Base } from 'src/app/shared/models/base.entity';
 import {
   Column,
@@ -15,6 +16,8 @@ import { DeliveryPoint } from './delivery-point.entity';
   name: 'Point',
 })
 export class Point extends Base {
+  @IsNotEmpty({ message: 'Latitude column must not be empty.' })
+  @IsLatitude({ message: 'Value must be a latitude coordinate' })
   @Column({
     name: 'latitude',
     type: 'decimal',

@@ -8,12 +8,10 @@ import { PointDataConverter } from '../data-converters/point.data-converter';
 import { User } from '../../user/models/user.entity';
 import { ItemService } from '../../item/services/item.service';
 import { DeliveryPoint } from '../models/delivery-point.entity';
-import { PointItemDataConverter } from '../data-converters/point-item.data-converter';
 import { Item } from '../../item/models/item.entity';
 import { ErrorHandlerService } from 'src/app/shared/errors/error.service';
 import { PointDto } from '../dtos/point.dto';
 import { PointItemService } from './point-item.service';
-import { PointItem } from '../models/ point-item.entity';
 import { PagedDto } from '../dtos/points-paged.dto';
 
 @Injectable()
@@ -22,7 +20,6 @@ export class PointService {
     @InjectRepository(Point) private pointRepository: Repository<Point>,
     @InjectRepository(User) private userRepository: Repository<User>,
     private pointDataConverter: PointDataConverter,
-    private pointItemDataConverter: PointItemDataConverter,
     private userService: UserService,
     private pointItemService: PointItemService,
     private itemService: ItemService,
@@ -35,40 +32,44 @@ export class PointService {
     });
   }
 
-  public async getAllByLatLong(lat: number, lng: number, body) {
-    const rawData = await this.pointRepository.query(`SELECT *, (6371 *
-      acos(
-          cos(radians(${lat})) *
-          cos(radians(latitude)) *
-          cos(radians(${lng}) - radians(longitude)) +
-          sin(radians(${lat})) *
-          sin(radians(latitude))
-      )) AS distance
-      FROM Point WHERE deleted_time IS NULL HAVING distance <= 12.5 LIMIT ${body.pageSize} OFFSET ${body.pageIndex}
-      `);
+  public async getAllByLatLong(lat: number, lng: number, body: PagedDto) {
+    const rawData = await this.pointRepository
+      .createQueryBuilder('point')
+      .addSelect(
+        `(6371 *
+        acos(
+            cos(radians(${lat})) *
+            cos(radians(latitude)) *
+            cos(radians(${lng}) - radians(longitude)) +
+            sin(radians(${lat})) *
+            sin(radians(latitude))
+        ))`,
+        'distance',
+      )
+      .leftJoinAndSelect('point._pointItems', '_pointItems')
+      .leftJoinAndSelect('_pointItems._item', '_item')
+      .leftJoinAndSelect('point._deliveryPoint', '_deliveryPoint')
+      .leftJoinAndSelect('point._user', '_user')
+      .leftJoinAndSelect('_user.company', 'company')
+      .leftJoinAndSelect('point._changedBy', '_changedBy')
+      .where('point.deleted_time IS NULL')
+      .having('distance <= 12.5')
+      .take(body.pageSize)
+      .skip(body.pageIndex - 1)
+      .getMany();
 
-    // -23.550829 	-46.558265
-    // angeloni: -28.94046868845339, -49.47507767838186
+    const response: PagedDto = {} as PagedDto;
+    response.totalPoints = rawData.length;
+    response.pageSize = body.pageSize;
+    response.pageIndex = body.pageIndex;
 
-    //     SELECT *, (6371 *
-    //       acos(
-    //           cos(radians(-23.550829)) *
-    //           cos(radians(latitude)) *
-    //           cos(radians(-46.558265) - radians(longitude)) +
-    //           sin(radians(-23.850829)) *
-    //           sin(radians(latitude))
-    //       )) AS distance
-    // FROM Point HAVING distance <= 5
+    const pointDtos: PointDto[] = [];
+    for (const point of rawData) {
+      pointDtos.push(this.pointDataConverter.toDto(point));
+    }
+    response.points = pointDtos;
 
-    // const response: PagedDto = {} as PagedDto;
-    // response.totalPoints = rawData.length;
-
-    // const pointDtos = [];
-    // for (const point of rawData) {
-    //   pointDtos.push(this.pointDataConverter.toDto(point));
-    // }
-
-    return rawData;
+    return response;
   }
 
   public async createPoint(pointDto: CreatePointDto, identifier: string) {
