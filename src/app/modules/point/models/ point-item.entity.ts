@@ -1,7 +1,6 @@
+import { ValidateNested } from 'class-validator';
 import { Base } from 'src/app/shared/models/base.entity';
 import {
-  Column,
-  DeleteDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
@@ -28,6 +27,7 @@ export class PointItem extends Base {
     this._id = id;
   }
 
+  @ValidateNested()
   @ManyToOne(() => Point, (point) => point.pointItems)
   @JoinColumn({ name: 'point_id' })
   public _point: Point;
@@ -38,6 +38,7 @@ export class PointItem extends Base {
     this._point = point;
   }
 
+  @ValidateNested()
   @OneToOne(() => Item, (item) => item.items, {
     cascade: true,
   })
@@ -50,6 +51,7 @@ export class PointItem extends Base {
     this._item = item;
   }
 
+  @ValidateNested()
   @OneToOne(() => User, (user) => user.pointItemCollectedBy)
   @JoinColumn({ name: 'collected_by' })
   public _collectedBy: User;

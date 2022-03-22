@@ -1,5 +1,6 @@
 import { Point } from './point.entity';
-import { Column, Entity, JoinColumn, OneToOne, PrimaryColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, OneToOne } from 'typeorm';
+import { IsNotEmpty, IsString } from 'class-validator';
 
 @Entity({
   name: 'Delivery_Point_Spec',
@@ -14,6 +15,8 @@ export class DeliveryPoint {
   @JoinColumn({ name: `point_id` })
   public point: Point;
 
+  @IsNotEmpty({ message: 'Description column must not be empty.' })
+  @IsString({ message: 'Description value must be a string.' })
   @Column({
     name: 'description',
     type: 'text',

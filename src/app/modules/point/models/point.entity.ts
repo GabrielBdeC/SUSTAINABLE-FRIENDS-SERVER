@@ -1,4 +1,9 @@
-import { IsLatitude, IsNotEmpty } from 'class-validator';
+import {
+  IsLatitude,
+  IsLongitude,
+  IsNotEmpty,
+  ValidateNested,
+} from 'class-validator';
 import { Base } from 'src/app/shared/models/base.entity';
 import {
   Column,
@@ -17,7 +22,7 @@ import { DeliveryPoint } from './delivery-point.entity';
 })
 export class Point extends Base {
   @IsNotEmpty({ message: 'Latitude column must not be empty.' })
-  @IsLatitude({ message: 'Value must be a latitude coordinate' })
+  @IsLatitude({ message: 'Latitude value must be a number between -90 and 90' })
   @Column({
     name: 'latitude',
     type: 'decimal',
@@ -32,6 +37,10 @@ export class Point extends Base {
     this._latitude = latitude;
   }
 
+  @IsNotEmpty({ message: 'Longitude column must not be empty.' })
+  @IsLongitude({
+    message: 'Longitude column must be a number between -180 and 180.',
+  })
   @Column({
     name: 'longitude',
     type: 'decimal',
@@ -46,6 +55,7 @@ export class Point extends Base {
     this._longitude = longitude;
   }
 
+  @ValidateNested()
   // user id relation
   @ManyToOne(() => User, (user) => user.point)
   @JoinColumn({ name: 'user_id' })
@@ -57,6 +67,7 @@ export class Point extends Base {
     this._user = user;
   }
 
+  @ValidateNested()
   // changed by relation
   @ManyToOne(() => User, (user) => user.pointChangedBy)
   @JoinColumn({ name: 'changed_by' })
@@ -68,6 +79,7 @@ export class Point extends Base {
     this._changedBy = changedBy;
   }
 
+  @ValidateNested()
   @OneToOne(() => User, (user) => user.pointDeletedBy)
   @JoinColumn({ name: 'deleted_by' })
   public _deletedBy: User;
@@ -78,6 +90,7 @@ export class Point extends Base {
     this._deletedBy = deletedBy;
   }
 
+  @ValidateNested()
   // delivery point
   @OneToOne(() => DeliveryPoint, (deliveryPoint) => deliveryPoint.point, {
     nullable: true,
@@ -91,6 +104,7 @@ export class Point extends Base {
     this._deliveryPoint = deliveryPoint;
   }
 
+  @ValidateNested()
   // pointItem relation
   @OneToMany(() => PointItem, (pointItem) => pointItem._point, {
     cascade: true,

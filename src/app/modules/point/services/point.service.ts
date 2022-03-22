@@ -1,6 +1,6 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { Injectable } from '@nestjs/common';
-import { Repository } from 'typeorm';
+import { EntityNotFoundError, Repository } from 'typeorm';
 import { Point } from '../models/point.entity';
 import { UserService } from '../../user/services/user.service';
 import { CreatePointDto } from '../dtos/create-point.dto';
@@ -13,6 +13,7 @@ import { ErrorHandlerService } from 'src/app/shared/errors/error.service';
 import { PointDto } from '../dtos/point.dto';
 import { PointItemService } from './point-item.service';
 import { PagedDto } from '../dtos/points-paged.dto';
+import { validateOrReject } from 'class-validator';
 
 @Injectable()
 export class PointService {
@@ -26,10 +27,53 @@ export class PointService {
     private errorHandlerService: ErrorHandlerService,
   ) {}
 
-  public async getAll(): Promise<Point[]> {
-    return this.pointRepository.find({
-      relations: ['_user', '_changedBy', '_collectPoint'],
-    });
+  // public async getAll(): Promise<Point[]> {
+  //   return this.pointRepository.find({
+  //     relations: ['_user', '_changedBy', '_collectPoint'],
+  //   });
+  // }
+
+  public async createPoint(pointDto: CreatePointDto, identifier: string) {
+    const user: User = await this.userService.findOne(identifier);
+    // TODO: handle exceptions
+    const point: Point = this.pointDataConverter.toEntity(pointDto);
+    const items: Item[] = await this.itemService.getItemsFromIds(
+      pointDto.items,
+    );
+
+    point.user = user;
+
+    point.pointItems = await this.pointItemService.getPointItems(
+      items,
+      user,
+      point,
+    );
+
+    if (user.getCompany() && pointDto.description) {
+      const deliveryPoint: DeliveryPoint = new DeliveryPoint();
+      deliveryPoint.description = pointDto.description;
+      point.deliveryPoint = deliveryPoint;
+    } else if (user.getCompany() && !pointDto.description) {
+      return this.errorHandlerService.WithoutDescription();
+    }
+
+    if (user.getPersonal() && pointDto.description) {
+      return this.errorHandlerService.InappropriateUser();
+    }
+
+    try {
+      await validateOrReject(point, {
+        validationError: {
+          target: false,
+        },
+      });
+    } catch (error) {
+      return error;
+    }
+
+    const new_point = await this.pointRepository.save(point);
+
+    return this.pointDataConverter.toDto(new_point);
   }
 
   public async getAllByLatLong(lat: number, lng: number, body: PagedDto) {
@@ -72,37 +116,6 @@ export class PointService {
     return response;
   }
 
-  public async createPoint(pointDto: CreatePointDto, identifier: string) {
-    const user: User = await this.userService.findOne(identifier);
-    // TODO: handle exceptions
-    const point: Point = this.pointDataConverter.toEntity(pointDto);
-    const items: Item[] = await this.itemService.getItemsFromIds(
-      pointDto.items,
-    );
-
-    point.user = user;
-
-    point.pointItems = await this.pointItemService.getPointItems(
-      items,
-      user,
-      point,
-    );
-
-    if (user.getCompany()) {
-      const deliveryPoint: DeliveryPoint = new DeliveryPoint();
-      deliveryPoint.description = pointDto.description;
-      point.deliveryPoint = deliveryPoint;
-    }
-
-    if (user.getPersonal() && pointDto.description) {
-      return this.errorHandlerService.InappropriateUser();
-    }
-
-    const new_point = await this.pointRepository.save(point);
-
-    return this.pointDataConverter.toDto(new_point);
-  }
-
   public async getOne(identifier: string): Promise<PointDto | any> {
     try {
       const point = await this.pointRepository
@@ -119,7 +132,9 @@ export class PointService {
       return point;
       // return this.pointDataConverter.toDto(point);
     } catch (error) {
-      return error;
+      if (error instanceof EntityNotFoundError) {
+        return this.errorHandlerService.pointNotFound(identifier);
+      }
     }
   }
 
@@ -128,13 +143,13 @@ export class PointService {
     pointDto: CreatePointDto,
     userIdentifier: string,
   ) {
+    const user: User = await this.userService.findOne(userIdentifier);
+    // TODO: handle exceptions
+    // const point: Point = this.pointDataConverter.toEntity(pointDto);
+
+    const updated_point = await this.getOne(pointIdentifier);
+
     try {
-      const user: User = await this.userService.findOne(userIdentifier);
-      // TODO: handle exceptions
-      // const point: Point = this.pointDataConverter.toEntity(pointDto);
-
-      const updated_point = await this.getOne(pointIdentifier);
-
       this.pointItemService.deletePointItems(updated_point.pointItems);
 
       if (pointDto.items) {
@@ -166,11 +181,12 @@ export class PointService {
   }
 
   public async deletePoint(pointId: string, userIdentifier: string) {
+    // route tested
+    const point: Point = await this.getOne(pointId);
+
+    const user: User = await this.userService.findOne(userIdentifier);
+
     try {
-      const point: Point = await this.getOne(pointId);
-
-      const user: User = await this.userService.findOne(userIdentifier);
-
       point.changedBy = user;
       point.deletedBy = user;
       await this.pointRepository.save(point);
@@ -191,12 +207,15 @@ export class PointService {
   }
 
   public async deletePointItem(
+    pointIdentifier: string,
     pointItemIdentifier: string,
     userIdentifier: string,
   ) {
-    return this.pointItemService.softDeletePointItem(
-      pointItemIdentifier,
-      userIdentifier,
-    );
+    if (await this.getOne(pointIdentifier)) {
+      return this.pointItemService.softDeletePointItem(
+        pointItemIdentifier,
+        userIdentifier,
+      );
+    }
   }
 }

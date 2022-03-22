@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { ErrorHandlerService } from 'src/app/shared/errors/error.service';
+import { EntityNotFoundError, Repository } from 'typeorm';
 import { Item } from '../../item/models/item.entity';
 import { User } from '../../user/models/user.entity';
 import { UserService } from '../../user/services/user.service';
@@ -15,6 +16,7 @@ export class PointItemService {
     @InjectRepository(PointItem)
     private pointItemRepository: Repository<PointItem>,
     private userService: UserService,
+    private errorHandlerService: ErrorHandlerService,
   ) {}
 
   public async getPointItems(
@@ -61,7 +63,9 @@ export class PointItemService {
 
       return 'pointItem deleted';
     } catch (error) {
-      return error;
+      if (error instanceof EntityNotFoundError) {
+        return this.errorHandlerService.pointItemNotFound(pointItemIdentifier);
+      }
     }
   }
 }

@@ -1,4 +1,9 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 
 @Injectable()
 export class ErrorHandlerService {
@@ -33,10 +38,12 @@ export class ErrorHandlerService {
       throw new HttpException(
         {
           status: HttpStatus.NOT_FOUND,
-          error: {
-            error: 'Not Found',
-            message: `Could not find user with email \'${parameters.email}\'.`,
-          },
+          response: [
+            {
+              error: 'Not Found',
+              message: `Could not find user with email \'${parameters.email}\'.`,
+            },
+          ],
         },
         HttpStatus.NOT_FOUND,
       );
@@ -44,21 +51,63 @@ export class ErrorHandlerService {
       throw new HttpException(
         {
           status: HttpStatus.NOT_FOUND,
-          error: {
-            error: 'Not Found',
-            message: `Could not find user with identifier \'${parameters.identifier}\'.`,
-          },
+          response: [
+            {
+              error: 'Not Found',
+              message: `Could not find user with identifier \'${parameters.identifier}\'.`,
+            },
+          ],
         },
         HttpStatus.NOT_FOUND,
       );
     }
   }
 
-  public async ItemNonExistent(items, itemsLength) {
+  public async pointNotFound(identifier) {
+    throw new HttpException(
+      {
+        status: HttpStatus.NOT_FOUND,
+        response: [
+          {
+            error: 'NotFoundError',
+            message: `Could not find point with identifier \'${identifier}\'`,
+          },
+        ],
+      },
+      HttpStatus.NOT_FOUND,
+    );
+  }
+
+  public async pointItemNotFound(identifier) {
+    throw new HttpException(
+      {
+        status: HttpStatus.NOT_FOUND,
+        response: [
+          {
+            error: 'NotFoundError',
+            message: `Could not find Point Item with identifier \'${identifier}\'`,
+          },
+        ],
+      },
+      HttpStatus.NOT_FOUND,
+    );
+  }
+
+  public async ItemNonExistent(items: number[], itemsLength: number) {
+    if (items.length === 0) {
+      throw new HttpException(
+        {
+          error: {
+            message: 'You must provide an item id in order to create a Point.',
+          },
+        },
+        HttpStatus.BAD_REQUEST,
+      );
+    }
     throw new HttpException(
       {
         error: {
-          message: `Items with the id of ${items} are not on the database. Please, provide an appropriate numbers between 0 and ${itemsLength}.`,
+          message: `Items with the id of \'${items}\' are not on the database. Please, provide an appropriate numbers between 0 and ${itemsLength}.`,
         },
       },
       HttpStatus.BAD_REQUEST,
@@ -68,11 +117,28 @@ export class ErrorHandlerService {
   public async InappropriateUser() {
     throw new HttpException(
       {
-        error: {
+        status: HttpStatus.FORBIDDEN,
+        response: {
+          error: 'NotAuthorizedError',
           message: `Users which aren't from companies are forbidden of creating a delivery point.`,
         },
       },
       HttpStatus.FORBIDDEN,
+    );
+  }
+
+  public async WithoutDescription() {
+    throw new HttpException(
+      {
+        status: HttpStatus.BAD_REQUEST,
+        response: [
+          {
+            error: 'Bad Request',
+            message: 'Delivery points must have a description',
+          },
+        ],
+      },
+      HttpStatus.BAD_REQUEST,
     );
   }
 }

@@ -14,6 +14,8 @@ import { JwtAuthGuard } from 'src/app/shared/auth/guards/jwt-auth.guard';
 import { PointDataConverter } from '../data-converters/point.data-converter';
 import { CreatePointDto } from '../dtos/create-point.dto';
 import { PagedDto } from '../dtos/points-paged.dto';
+import { CreatePointValidationPipe } from '../pipes/create-point-validation.pipe';
+import { VerifyIdentifierPipe } from '../pipes/identifier-verification.pipe';
 import { PointService } from '../services/point.service';
 
 @Controller('point')
@@ -46,15 +48,19 @@ export class PointController {
   @UseGuards(JwtAuthGuard)
   @Post()
   public async createPoint(
-    @Body() body: CreatePointDto,
+    @Body(new CreatePointValidationPipe()) body: CreatePointDto,
     @Request() req,
   ): Promise<any> {
+    // route tested
     return this.pointService.createPoint(body, req.user.identifier);
   }
 
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @Get('/:id')
-  public async getOnePoint(@Param('id') pointId: string) {
+  public async getOnePoint(
+    @Param('id', new VerifyIdentifierPipe()) pointId: string,
+  ) {
+    // route tested
     const point = await this.pointService.getOne(pointId);
     return this.pointDataConverter.toDto(point);
   }
@@ -62,8 +68,9 @@ export class PointController {
   @UseGuards(JwtAuthGuard)
   @Put('/:id')
   public async updatePoint(
-    @Param('id') pointId: string,
-    @Body() body: CreatePointDto,
+    // route tested
+    @Param('id', new VerifyIdentifierPipe()) pointId: string,
+    @Body(new CreatePointValidationPipe()) body: CreatePointDto,
     @Request() req,
   ) {
     return this.pointService.updatePoint(pointId, body, req.user.identifier);
@@ -72,7 +79,8 @@ export class PointController {
   @UseGuards(JwtAuthGuard)
   @Delete('/:pointId')
   public async deletePoint(
-    @Param('pointId') pointIdentifier: string,
+    // route tested
+    @Param('pointId', new VerifyIdentifierPipe()) pointIdentifier: string,
     @Request() req,
   ) {
     return this.pointService.deletePoint(pointIdentifier, req.user.identifier);
@@ -81,10 +89,14 @@ export class PointController {
   @UseGuards(JwtAuthGuard)
   @Delete('/:pointId/pointItem/:pointItemId')
   public async deletePointItem(
-    @Param('pointItemId') pointItemIdentifier: string,
+    // route tested
+    @Param('pointId', new VerifyIdentifierPipe()) pointIdentifier: string,
+    @Param('pointItemId', new VerifyIdentifierPipe())
+    pointItemIdentifier: string,
     @Request() req,
   ) {
     return this.pointService.deletePointItem(
+      pointIdentifier,
       pointItemIdentifier,
       req.user.identifier,
     );

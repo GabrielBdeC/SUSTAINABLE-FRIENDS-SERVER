@@ -22,7 +22,7 @@ export class UserAuthController {
   ) {}
 
   @Post('signup')
-  async signUp(@Body() body: UserDto, @Request() req) {
+  async signUp(@Body() body: UserDto) {
     const new_user_entity = await this.userDataConverter.toEntity(body);
     const new_user = await this.userService.create(new_user_entity);
     const userDto = this.userDataConverter.toDto(new_user);
