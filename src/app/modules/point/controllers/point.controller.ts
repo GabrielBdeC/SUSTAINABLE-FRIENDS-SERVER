@@ -14,8 +14,10 @@ import { JwtAuthGuard } from 'src/app/shared/auth/guards/jwt-auth.guard';
 import { PointDataConverter } from '../data-converters/point.data-converter';
 import { CreatePointDto } from '../dtos/create-point.dto';
 import { PagedDto } from '../dtos/points-paged.dto';
+import { CoordinatesValidationPipe } from '../pipes/coordinates.pipe';
 import { CreatePointValidationPipe } from '../pipes/create-point-validation.pipe';
 import { VerifyIdentifierPipe } from '../pipes/identifier-verification.pipe';
+import { PagedBodyValidationPipe } from '../pipes/paged-dto.validation.pipe';
 import { PointService } from '../services/point.service';
 
 @Controller('point')
@@ -38,9 +40,9 @@ export class PointController {
   // @UseGuards(JwtAuthGuard)
   @Get()
   public async getAllByLatLong(
-    @Query('lat') latitude: number,
-    @Query('long') longitude: number,
-    @Body() body: PagedDto,
+    @Query('lat', new CoordinatesValidationPipe()) latitude: number,
+    @Query('long', new CoordinatesValidationPipe()) longitude: number,
+    @Body(new PagedBodyValidationPipe()) body: PagedDto,
   ) {
     return this.pointService.getAllByLatLong(latitude, longitude, body);
   }

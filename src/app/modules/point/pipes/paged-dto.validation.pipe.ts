@@ -10,7 +10,7 @@ import { plainToClass } from 'class-transformer';
 import { validate } from 'class-validator';
 
 @Injectable()
-export class CreatePointValidationPipe implements PipeTransform {
+export class PagedBodyValidationPipe implements PipeTransform {
   async transform(value: any, { metatype }: ArgumentMetadata) {
     if (!metatype || !this.toValidate(metatype)) {
       return value;
@@ -41,8 +41,6 @@ export class CreatePointValidationPipe implements PipeTransform {
         },
         HttpStatus.BAD_REQUEST,
       );
-
-      throw new BadRequestException('Validation failed');
     }
     return value;
   }
