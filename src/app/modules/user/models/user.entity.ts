@@ -7,7 +7,7 @@ import {
   MaxLength,
   MinLength,
 } from 'class-validator';
-import { Base } from 'src/app/shared/models/base.entity';
+import { Base } from '../../../shared/models/base.entity';
 import { PersonalUser } from './personal-user.entity';
 import { CompanyUser } from './company-user.entity';
 import { IPreferences } from '../constants/preferences.constant';

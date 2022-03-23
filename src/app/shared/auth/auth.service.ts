@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from 'src/app/modules/user/models/user.entity';
+import { User } from '../../modules/user/models/user.entity';
 import { Repository } from 'typeorm';
 import * as argon2 from 'argon2';
-import { UserDataConverter } from 'src/app/modules/user/data-converters/user.data-converter';
-import { UserDto } from 'src/app/modules/user/dtos/user.dto';
+import { UserDataConverter } from '../../modules/user/data-converters/user.data-converter';
+import { UserDto } from '../../modules/user/dtos/user.dto';
 import { JwtService } from '@nestjs/jwt';
 import { ErrorHandlerService } from '../errors/error.service';
 

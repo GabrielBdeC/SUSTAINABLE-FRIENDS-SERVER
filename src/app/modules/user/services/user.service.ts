@@ -2,7 +2,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '../models/user.entity';
 import { validateOrReject } from 'class-validator';
-import { ErrorHandlerService } from 'src/app/shared/errors/error.service';
+import { ErrorHandlerService } from '../../../shared/errors/error.service';
 import { UserDto } from '../dtos/user.dto';
 import { UserDataConverter } from '../data-converters/user.data-converter';
 import { IPreferences } from '../constants/preferences.constant';

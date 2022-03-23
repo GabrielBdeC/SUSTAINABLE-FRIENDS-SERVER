@@ -1,4 +1,4 @@
-import { BaseDto } from 'src/app/shared/dtos/base.dto';
+import { BaseDto } from '../../../shared/dtos/base.dto';
 import { ItemDto } from '../../item/dtos/item.dto';
 import { UserDto } from '../../user/dtos/user.dto';
 

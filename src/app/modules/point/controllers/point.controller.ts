@@ -10,7 +10,7 @@ import {
   Request,
   UseGuards,
 } from '@nestjs/common';
-import { JwtAuthGuard } from 'src/app/shared/auth/guards/jwt-auth.guard';
+import { JwtAuthGuard } from '../../../shared/auth/guards/jwt-auth.guard';
 import { PointDataConverter } from '../data-converters/point.data-converter';
 import { CreatePointDto } from '../dtos/create-point.dto';
 import { PagedDto } from '../dtos/points-paged.dto';
@@ -26,16 +26,6 @@ export class PointController {
     private pointService: PointService,
     private pointDataConverter: PointDataConverter,
   ) {}
-
-  // @Get()
-  // public async getAll(): Promise<Point[]> {
-  //   return this.pointService.getAll();
-  //   /* return this.pointService.getAll().then((listPoint: Point[]) => {
-  //     return listPoint.map((point: Point) => {
-  //       return this.pointDataConverter.toDto(point);
-  //     });
-  //   }); */
-  // }
 
   // @UseGuards(JwtAuthGuard)
   @Get()

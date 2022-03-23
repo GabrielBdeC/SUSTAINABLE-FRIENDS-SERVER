@@ -8,7 +8,6 @@ import {
 } from '@nestjs/common';
 import { AuthService } from '../auth.service';
 import { UserDto } from 'src/app/modules/user/dtos/user.dto';
-import { JwtService } from '@nestjs/jwt';
 import { LoginUserDto } from 'src/app/modules/user/dtos/loginUser.dto';
 import { validate } from 'class-validator';
 

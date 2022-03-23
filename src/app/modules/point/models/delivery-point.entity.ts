@@ -6,9 +6,6 @@ import { IsNotEmpty, IsString } from 'class-validator';
   name: 'Delivery_Point_Spec',
 })
 export class DeliveryPoint {
-  // @PrimaryColumn({ name: `point_id` })
-  // public id: number;
-
   @OneToOne(() => Point, (point) => point._deliveryPoint, {
     primary: true,
   })

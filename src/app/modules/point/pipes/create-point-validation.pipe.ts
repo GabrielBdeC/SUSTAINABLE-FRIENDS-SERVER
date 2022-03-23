@@ -8,7 +8,6 @@ import {
 } from '@nestjs/common';
 import { plainToClass } from 'class-transformer';
 import { validate } from 'class-validator';
-import { CreatePointDto } from '../dtos/create-point.dto';
 
 @Injectable()
 export class CreatePointValidationPipe implements PipeTransform {

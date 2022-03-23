@@ -10,7 +10,7 @@ import { ItemModule } from '../item/item.module';
 import { PointItem } from './models/ point-item.entity';
 import { Item } from '../item/models/item.entity';
 import { PointItemDataConverter } from './data-converters/point-item.data-converter';
-import { ErrorModule } from 'src/app/shared/errors/error.module';
+import { ErrorModule } from '../../shared/errors/error.module';
 import { PointItemService } from './services/point-item.service';
 
 @Module({

@@ -6,7 +6,7 @@ import {
   Request,
   UseGuards,
 } from '@nestjs/common';
-import { JwtAuthGuard } from 'src/app/shared/auth/guards/jwt-auth.guard';
+import { JwtAuthGuard } from '../../../shared/auth/guards/jwt-auth.guard';
 import { PreferencesDto } from '../dtos/preferences.dto';
 import { User } from '../models/user.entity';
 import { PreferencesValidationPipe } from '../pipes/post-preferences.pipe';
