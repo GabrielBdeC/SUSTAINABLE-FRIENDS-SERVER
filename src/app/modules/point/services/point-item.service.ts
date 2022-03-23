@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ErrorHandlerService } from 'src/app/shared/errors/error.service';
+import { ErrorHandlerService } from '../../../shared/errors/error.service';
 import { EntityNotFoundError, Repository } from 'typeorm';
 import { Item } from '../../item/models/item.entity';
 import { User } from '../../user/models/user.entity';

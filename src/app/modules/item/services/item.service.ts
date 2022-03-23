@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ErrorHandlerService } from 'src/app/shared/errors/error.service';
+import { ErrorHandlerService } from '../../../shared/errors/error.service';
 import { Repository } from 'typeorm';
 import { IPreferences } from '../../user/constants/preferences.constant';
 import { Item } from '../models/item.entity';

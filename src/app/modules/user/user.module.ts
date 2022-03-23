@@ -1,7 +1,7 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AuthModule } from 'src/app/shared/auth/auth.module';
-import { ErrorModule } from 'src/app/shared/errors/error.module';
+import { AuthModule } from '../../shared/auth/auth.module';
+import { ErrorModule } from '../../shared/errors/error.module';
 import { ItemModule } from '../item/item.module';
 import { UserAuthController } from './controllers/user-auth.controller';
 import { UserController } from './controllers/user.controller';

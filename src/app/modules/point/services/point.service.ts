@@ -13,7 +13,6 @@ import { ErrorHandlerService } from 'src/app/shared/errors/error.service';
 import { PointDto } from '../dtos/point.dto';
 import { PointItemService } from './point-item.service';
 import { PagedDto } from '../dtos/points-paged.dto';
-import { validateOrReject } from 'class-validator';
 
 @Injectable()
 export class PointService {
@@ -26,12 +25,6 @@ export class PointService {
     private itemService: ItemService,
     private errorHandlerService: ErrorHandlerService,
   ) {}
-
-  // public async getAll(): Promise<Point[]> {
-  //   return this.pointRepository.find({
-  //     relations: ['_user', '_changedBy', '_collectPoint'],
-  //   });
-  // }
 
   public async createPoint(pointDto: CreatePointDto, identifier: string) {
     const user: User = await this.userService.findOne(identifier);
@@ -59,16 +52,6 @@ export class PointService {
 
     if (user.getPersonal() && pointDto.description) {
       return this.errorHandlerService.InappropriateUser();
-    }
-
-    try {
-      await validateOrReject(point, {
-        validationError: {
-          target: false,
-        },
-      });
-    } catch (error) {
-      return error;
     }
 
     const new_point = await this.pointRepository.save(point);

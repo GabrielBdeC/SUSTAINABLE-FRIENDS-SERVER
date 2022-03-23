@@ -4,7 +4,7 @@ import {
   IsNotEmpty,
   ValidateNested,
 } from 'class-validator';
-import { Base } from 'src/app/shared/models/base.entity';
+import { Base } from '../../../shared/models/base.entity';
 import {
   Column,
   Entity,

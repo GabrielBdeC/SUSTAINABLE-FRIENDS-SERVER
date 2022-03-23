@@ -86,11 +86,6 @@ export class CreateUserValidationPipe implements PipeTransform {
       }
     }
 
-    // check if items of preferences exists on database
-    // if(object.preferences){
-
-    // }
-
     // verification of errors
     const errors = await validate(object);
     if (errors.length > 0) {

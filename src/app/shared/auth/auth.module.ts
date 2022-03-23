@@ -23,8 +23,7 @@ import { ErrorModule } from '../errors/error.module';
         const options: JwtModuleOptions = {
           secret: configService.get('JWT_SECRET'),
           signOptions: {
-            expiresIn: '2h', // changed the expiration limit for better testing
-            // algorithm: 'RS256',
+            expiresIn: '2h',
           },
         };
         return options;

@@ -5,7 +5,6 @@ import { v4 as uuidv4 } from 'uuid';
 import { CompanyUser } from '../models/company-user.entity';
 import { PersonalUser } from '../models/personal-user.entity';
 import { IPreferences } from '../constants/preferences.constant';
-import { HttpException, HttpStatus } from '@nestjs/common';
 import { CreateUserDto } from '../dtos/create-user.dto';
 
 export class UserDataConverter {

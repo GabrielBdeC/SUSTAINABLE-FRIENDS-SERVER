@@ -6,9 +6,9 @@ import {
   Request,
   UseGuards,
 } from '@nestjs/common';
-import { AuthService } from 'src/app/shared/auth/auth.service';
-import { JwtAuthGuard } from 'src/app/shared/auth/guards/jwt-auth.guard';
-import { LocalAuthGuard } from 'src/app/shared/auth/guards/local-auth.guard';
+import { AuthService } from '../../../shared/auth/auth.service';
+import { JwtAuthGuard } from '../../../shared/auth/guards/jwt-auth.guard';
+import { LocalAuthGuard } from '../../../shared/auth/guards/local-auth.guard';
 import { UserDataConverter } from '../data-converters/user.data-converter';
 import { CreateUserDto } from '../dtos/create-user.dto';
 import { LoginUserDto } from '../dtos/loginUser.dto';

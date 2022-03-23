@@ -1,5 +1,4 @@
 import {
-  ArgumentMetadata,
   HttpException,
   HttpStatus,
   Injectable,
@@ -8,7 +7,7 @@ import {
 
 @Injectable()
 export class VerifyIdentifierPipe implements PipeTransform {
-  transform(value: string, metadata: ArgumentMetadata) {
+  transform(value: string) {
     if (/^[0-9A-F]{32}$/i.test(value)) {
       return value;
     } else {

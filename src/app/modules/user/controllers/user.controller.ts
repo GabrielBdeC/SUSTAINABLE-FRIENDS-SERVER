@@ -6,8 +6,10 @@ import {
   Request,
   UseGuards,
 } from '@nestjs/common';
-import { JwtAuthGuard } from 'src/app/shared/auth/guards/jwt-auth.guard';
+import { JwtAuthGuard } from '../../../shared/auth/guards/jwt-auth.guard';
+import { PreferencesDto } from '../dtos/preferences.dto';
 import { User } from '../models/user.entity';
+import { PreferencesValidationPipe } from '../pipes/post-preferences.pipe';
 import { UserService } from '../services/user.service';
 
 @Controller('user')
@@ -27,7 +29,11 @@ export class UserController {
 
   @UseGuards(JwtAuthGuard)
   @Post('preference')
-  async postPreference(@Body() body, @Request() req) {
+  async postPreference(
+    @Body(new PreferencesValidationPipe()) body: PreferencesDto,
+    @Request() req,
+  ) {
+    await this.userService.checkItems(body.preferences);
     return this.userService.postPreference(
       req.user.identifier,
       body.preferences,
