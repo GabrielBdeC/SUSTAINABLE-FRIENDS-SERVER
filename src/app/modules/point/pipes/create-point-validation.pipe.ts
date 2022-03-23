@@ -1,6 +1,5 @@
 import {
   ArgumentMetadata,
-  BadRequestException,
   HttpException,
   HttpStatus,
   Injectable,
@@ -41,8 +40,6 @@ export class CreatePointValidationPipe implements PipeTransform {
         },
         HttpStatus.BAD_REQUEST,
       );
-
-      throw new BadRequestException('Validation failed');
     }
     return value;
   }

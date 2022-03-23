@@ -10,6 +10,4 @@ export interface PointDto extends BaseDto {
   pointItems: PointItemDto[];
   createdBy: UserDto;
   changedBy?: UserDto;
-
-  // delivery?: DeliveryPoint;
 }

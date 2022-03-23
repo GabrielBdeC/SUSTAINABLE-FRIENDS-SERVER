@@ -28,7 +28,6 @@ export class UserDataConverter {
   public async toEntity(dto: CreateUserDto): Promise<User> {
     const user = new User();
     user.setName(dto.name);
-    // user.setName(dto.getName())
     user.setEmail(dto.email);
 
     if (dto.password && typeof dto.password === 'string') {

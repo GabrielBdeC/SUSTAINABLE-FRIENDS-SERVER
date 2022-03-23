@@ -2,7 +2,6 @@ import {
   PipeTransform,
   Injectable,
   ArgumentMetadata,
-  BadRequestException,
   HttpException,
   HttpStatus,
 } from '@nestjs/common';
@@ -63,8 +62,6 @@ export class PreferencesValidationPipe implements PipeTransform<any> {
         },
         HttpStatus.BAD_REQUEST,
       );
-
-      throw new BadRequestException('Validation failed');
     }
     return value;
   }

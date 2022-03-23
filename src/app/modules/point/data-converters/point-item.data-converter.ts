@@ -10,7 +10,6 @@ export class PointItemDataConverter {
     const pointItem = new PointItem();
     pointItem.item = item;
     pointItem.point = point;
-    // pointItem.collectedBy = user;
     const identifier = uuidv4().replace(/-/g, '').toUpperCase();
     pointItem.identifier = identifier;
 
