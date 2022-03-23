@@ -6,6 +6,7 @@ import { CompanyUser } from '../models/company-user.entity';
 import { PersonalUser } from '../models/personal-user.entity';
 import { IPreferences } from '../constants/preferences.constant';
 import { HttpException, HttpStatus } from '@nestjs/common';
+import { CreateUserDto } from '../dtos/create-user.dto';
 
 export class UserDataConverter {
   public toDto(entity: User): UserDto {
@@ -25,7 +26,7 @@ export class UserDataConverter {
     return response;
   }
 
-  public async toEntity(dto: UserDto): Promise<User> {
+  public async toEntity(dto: CreateUserDto): Promise<User> {
     const user = new User();
     user.setName(dto.name);
     // user.setName(dto.getName())
@@ -41,17 +42,7 @@ export class UserDataConverter {
     const identifier = uuidv4().replace(/-/g, '').toUpperCase();
     user.identifier = identifier;
 
-    if (!dto.cnpj && !dto.cpf) {
-      throw new HttpException(
-        {
-          status: HttpStatus.BAD_REQUEST,
-          error: {
-            message: 'The user must have either a CPF or CNPJ',
-          },
-        },
-        HttpStatus.BAD_REQUEST,
-      );
-    }
+    // check if name item exists on database
 
     user.preferences = await this.handlePreferences(dto.preferences);
 
@@ -63,18 +54,6 @@ export class UserDataConverter {
       const company = new CompanyUser();
       company.cnpj = dto.cnpj;
       user.setCompany(company);
-      // if (dto.preferences) {
-      //   throw new HttpException(
-      //     {
-      //       status: HttpStatus.BAD_REQUEST,
-      //       error: {
-      //         message:
-      //           'The user which has a CNPJ cannot have preferences property',
-      //       },
-      //     },
-      //     HttpStatus.BAD_REQUEST,
-      //   );
-      // }
     }
 
     return user;
@@ -85,7 +64,7 @@ export class UserDataConverter {
   ): Promise<IPreferences> {
     const _preferences: IPreferences = {} as IPreferences;
 
-    if (preferences.items) {
+    if (preferences && preferences.items) {
       const items = preferences.items.filter((item) => {
         if (item.active) {
           return item;

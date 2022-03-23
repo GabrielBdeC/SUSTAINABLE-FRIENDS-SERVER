@@ -6,13 +6,18 @@ import {
   Param,
   Post,
   Put,
+  Query,
   Request,
   UseGuards,
 } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/app/shared/auth/guards/jwt-auth.guard';
 import { PointDataConverter } from '../data-converters/point.data-converter';
 import { CreatePointDto } from '../dtos/create-point.dto';
-import { Point } from '../models/point.entity';
+import { PagedDto } from '../dtos/points-paged.dto';
+import { CoordinatesValidationPipe } from '../pipes/coordinates.pipe';
+import { CreatePointValidationPipe } from '../pipes/create-point-validation.pipe';
+import { VerifyIdentifierPipe } from '../pipes/identifier-verification.pipe';
+import { PagedBodyValidationPipe } from '../pipes/paged-dto.validation.pipe';
 import { PointService } from '../services/point.service';
 
 @Controller('point')
@@ -22,48 +27,78 @@ export class PointController {
     private pointDataConverter: PointDataConverter,
   ) {}
 
+  // @Get()
+  // public async getAll(): Promise<Point[]> {
+  //   return this.pointService.getAll();
+  //   /* return this.pointService.getAll().then((listPoint: Point[]) => {
+  //     return listPoint.map((point: Point) => {
+  //       return this.pointDataConverter.toDto(point);
+  //     });
+  //   }); */
+  // }
+
+  // @UseGuards(JwtAuthGuard)
   @Get()
-  public async getAll(): Promise<Point[]> {
-    return this.pointService.getAll();
-    /* return this.pointService.getAll().then((listPoint: Point[]) => {
-      return listPoint.map((point: Point) => {
-        return this.pointDataConverter.toDto(point);
-      });
-    }); */
+  public async getAllByLatLong(
+    @Query('lat', new CoordinatesValidationPipe()) latitude: number,
+    @Query('long', new CoordinatesValidationPipe()) longitude: number,
+    @Body(new PagedBodyValidationPipe()) body: PagedDto,
+  ) {
+    return this.pointService.getAllByLatLong(latitude, longitude, body);
   }
 
   @UseGuards(JwtAuthGuard)
   @Post()
   public async createPoint(
-    @Body() body: CreatePointDto,
+    @Body(new CreatePointValidationPipe()) body: CreatePointDto,
     @Request() req,
   ): Promise<any> {
+    // route tested
     return this.pointService.createPoint(body, req.user.identifier);
   }
 
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @Get('/:id')
-  public async getOnePoint(@Param('id') pointId: string) {
-    return this.pointService.getOne(pointId);
+  public async getOnePoint(
+    @Param('id', new VerifyIdentifierPipe()) pointId: string,
+  ) {
+    // route tested
+    const point = await this.pointService.getOne(pointId);
+    return this.pointDataConverter.toDto(point);
   }
 
   @UseGuards(JwtAuthGuard)
   @Put('/:id')
   public async updatePoint(
-    @Param('id') pointId: string,
-    @Body() body: CreatePointDto,
+    // route tested
+    @Param('id', new VerifyIdentifierPipe()) pointId: string,
+    @Body(new CreatePointValidationPipe()) body: CreatePointDto,
     @Request() req,
   ) {
     return this.pointService.updatePoint(pointId, body, req.user.identifier);
   }
 
   @UseGuards(JwtAuthGuard)
+  @Delete('/:pointId')
+  public async deletePoint(
+    // route tested
+    @Param('pointId', new VerifyIdentifierPipe()) pointIdentifier: string,
+    @Request() req,
+  ) {
+    return this.pointService.deletePoint(pointIdentifier, req.user.identifier);
+  }
+
+  @UseGuards(JwtAuthGuard)
   @Delete('/:pointId/pointItem/:pointItemId')
   public async deletePointItem(
-    @Param('pointItemId') pointItemIdentifier: string,
+    // route tested
+    @Param('pointId', new VerifyIdentifierPipe()) pointIdentifier: string,
+    @Param('pointItemId', new VerifyIdentifierPipe())
+    pointItemIdentifier: string,
     @Request() req,
   ) {
     return this.pointService.deletePointItem(
+      pointIdentifier,
       pointItemIdentifier,
       req.user.identifier,
     );
