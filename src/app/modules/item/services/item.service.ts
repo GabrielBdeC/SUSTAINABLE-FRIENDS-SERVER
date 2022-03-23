@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ErrorHandlerService } from 'src/app/shared/errors/error.service';
 import { Repository } from 'typeorm';
+import { IPreferences } from '../../user/constants/preferences.constant';
 import { Item } from '../models/item.entity';
 
 @Injectable()
@@ -41,6 +42,18 @@ export class ItemService {
           items,
           numberOfItems.length,
         );
+      }
+    }
+  }
+
+  public async verifyItems(items: IPreferences): Promise<any> {
+    const itemsDB_names = await this.getAll().then((items) =>
+      items.map((item) => item.name),
+    );
+    for (const item of items.items) {
+      if (itemsDB_names.includes(item.name)) continue;
+      else {
+        return this.errorHandlerService.ItemNameNonExistent(item.name);
       }
     }
   }

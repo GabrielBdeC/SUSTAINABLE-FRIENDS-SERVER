@@ -8,10 +8,9 @@ import {
 } from '@nestjs/common';
 import { plainToClass } from 'class-transformer';
 import { validate } from 'class-validator';
-import { CreatePointDto } from '../dtos/create-point.dto';
 
 @Injectable()
-export class CreatePointValidationPipe implements PipeTransform {
+export class LoginUserValidationPipe implements PipeTransform {
   async transform(value: any, { metatype }: ArgumentMetadata) {
     if (!metatype || !this.toValidate(metatype)) {
       return value;
@@ -20,18 +19,11 @@ export class CreatePointValidationPipe implements PipeTransform {
     const errors = await validate(object);
     if (errors.length > 0) {
       const errorsResponse = [];
-
       for (const e of errors) {
-        delete e.children;
-        delete e.target;
-        delete e.value;
-        delete e.property;
-
         const errorMessage = {
           error: 'Validation Error',
           message: e.constraints,
         };
-
         errorsResponse.push(errorMessage);
       }
 
@@ -42,8 +34,6 @@ export class CreatePointValidationPipe implements PipeTransform {
         },
         HttpStatus.BAD_REQUEST,
       );
-
-      throw new BadRequestException('Validation failed');
     }
     return value;
   }

@@ -6,12 +6,14 @@ import { ErrorHandlerService } from 'src/app/shared/errors/error.service';
 import { UserDto } from '../dtos/user.dto';
 import { UserDataConverter } from '../data-converters/user.data-converter';
 import { IPreferences } from '../constants/preferences.constant';
+import { ItemService } from '../../item/services/item.service';
 
 export class UserService {
   constructor(
     @InjectRepository(User) private userRepository: Repository<User>,
     private errorHandlerService: ErrorHandlerService,
     private userDataConverter: UserDataConverter,
+    private itemService: ItemService,
   ) {}
 
   public async getAll(): Promise<User[]> {
@@ -51,6 +53,10 @@ export class UserService {
         identifier: identifier,
       });
     }
+  }
+
+  public async checkItems(items: IPreferences) {
+    return this.itemService.verifyItems(items);
   }
 
   public async getPreferences(userId: string): Promise<UserDto> {

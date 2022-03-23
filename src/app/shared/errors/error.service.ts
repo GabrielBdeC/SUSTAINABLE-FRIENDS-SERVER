@@ -114,6 +114,21 @@ export class ErrorHandlerService {
     );
   }
 
+  public async ItemNameNonExistent(name: string) {
+    throw new HttpException(
+      {
+        status: HttpStatus.NOT_FOUND,
+        response: [
+          {
+            error: 'NotFoundError',
+            message: `Item with the name of ${name} was not found on the database. Please, provide a valid name.`,
+          },
+        ],
+      },
+      HttpStatus.NOT_FOUND,
+    );
+  }
+
   public async InappropriateUser() {
     throw new HttpException(
       {

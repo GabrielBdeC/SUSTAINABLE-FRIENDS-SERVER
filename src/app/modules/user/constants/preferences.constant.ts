@@ -1,9 +1,27 @@
-interface IItemsPreference {
+import { Type } from 'class-transformer';
+import {
+  IsArray,
+  IsBoolean,
+  IsNotEmpty,
+  IsString,
+  ValidateNested,
+} from 'class-validator';
+
+export class IItemsPreference {
+  @IsString({ message: 'Name value must be a string' })
+  @IsNotEmpty({ message: 'Name value must not be empty.' })
   name: string;
+
+  @IsBoolean({ message: 'Active value must be a boolean.' })
+  @IsNotEmpty({ message: 'Active value must not be empty.' })
   active: true;
 }
 
-export interface IPreferences {
+export class IPreferences {
+  @IsArray()
+  @IsNotEmpty()
+  @ValidateNested({ each: true })
+  @Type(() => IItemsPreference)
   items: IItemsPreference[];
 }
 

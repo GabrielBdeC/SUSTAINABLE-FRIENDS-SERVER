@@ -39,13 +39,4 @@ export class PointDataConverter {
     dto.pointItems = pointItems;
     return dto;
   }
-
-  // public async response(entity) {
-  //   const dto: PointDto = {} as PointDto;
-  //   dto.distance = entity.distance;
-  //   dto.identifier = entity.point_identifier;
-  //   dto.latitude = entity.point_latitude;
-  //   dto.longitude = entity.point_longitude;
-
-  // }
 }
