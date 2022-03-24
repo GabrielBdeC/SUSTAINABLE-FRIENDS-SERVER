@@ -3,6 +3,8 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
+  HttpStatus,
   Param,
   Post,
   Put,
@@ -38,6 +40,7 @@ export class PointController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @HttpCode(HttpStatus.CREATED)
   @Post()
   public async createPoint(
     @Body(new CreatePointValidationPipe()) body: CreatePointDto,

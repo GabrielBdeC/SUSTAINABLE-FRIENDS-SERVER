@@ -2,6 +2,8 @@ import {
   Body,
   Controller,
   Get,
+  HttpCode,
+  HttpStatus,
   Post,
   Request,
   UseGuards,
@@ -25,6 +27,7 @@ export class UserAuthController {
     private authService: AuthService,
   ) {}
 
+  @HttpCode(HttpStatus.CREATED)
   @Post('signup')
   async signUp(@Body(new CreateUserValidationPipe()) body: CreateUserDto) {
     await this.userService.checkItems(body.preferences);
