@@ -50,7 +50,7 @@ export class PointController {
     return this.pointService.createPoint(body, req.user.identifier);
   }
 
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Get('/:id')
   public async getOnePoint(
     @Param('id', new VerifyIdentifierPipe()) pointId: string,
