@@ -26,7 +26,7 @@ export class CoordinatesValidationPipe implements PipeTransform {
             response: [
               {
                 error: 'Bad Request Error',
-                message: 'longitude value must be a number between -90 and 90.',
+                message: 'Latitude value must be a number between -90 and 90.',
               },
             ],
           },
