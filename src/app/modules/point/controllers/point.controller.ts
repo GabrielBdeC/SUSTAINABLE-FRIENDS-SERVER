@@ -27,8 +27,8 @@ export class PointController {
     private pointDataConverter: PointDataConverter,
   ) {}
 
-  // @UseGuards(JwtAuthGuard)
-  @Get()
+  @UseGuards(JwtAuthGuard)
+  @Post('getByLatLong')
   public async getAllByLatLong(
     @Query('lat', new CoordinatesValidationPipe()) latitude: number,
     @Query('long', new CoordinatesValidationPipe()) longitude: number,
