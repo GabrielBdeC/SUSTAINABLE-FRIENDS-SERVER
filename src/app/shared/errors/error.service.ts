@@ -19,7 +19,12 @@ export class ErrorHandlerService {
     throw new HttpException(
       {
         status: HttpStatus.BAD_REQUEST,
-        error: `\'${duplicate_entry}\' has already been used. Please choose another.`,
+        response: [
+          {
+            error: 'Duplicate Entry',
+            message: `\'${duplicate_entry}\' has already been used. Please choose another.`,
+          },
+        ],
       },
       HttpStatus.BAD_REQUEST,
     );
@@ -92,20 +97,29 @@ export class ErrorHandlerService {
     if (items.length === 0) {
       throw new HttpException(
         {
-          error: {
-            message: 'You must provide an item id in order to create a Point.',
-          },
+          status: HttpStatus.BAD_REQUEST,
+          response: [
+            {
+              error: 'Bad Request Error',
+              message:
+                'You must provide a valid item id in order to creat a Point.',
+            },
+          ],
         },
         HttpStatus.BAD_REQUEST,
       );
     }
     throw new HttpException(
       {
-        error: {
-          message: `Items with the id of \'${items}\' are not on the database. Please, provide an appropriate numbers between 0 and ${itemsLength}.`,
-        },
+        status: HttpStatus.BAD_REQUEST,
+        response: [
+          {
+            error: 'Bad Request Error',
+            message: `Items with the id of \'${items}\' are not on the database. Please, provide an appropriate numbers between 0 and ${itemsLength}.`,
+          },
+        ],
       },
-      HttpStatus.BAD_REQUEST,
+      HttpStatus.NOT_FOUND,
     );
   }
 
